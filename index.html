@@ -751,7 +751,7 @@ let fftWorker = null;
 // Audio Context & State
 const audioPlayer = document.getElementById('audioPlayer');
 let audioCtx, mediaSource, rawSplitter, analyserL, analyserR;
-let outSplitter, gainLL, gainRR, gainLR, gainRL, outMerger;
+let stereoSplitter, gainL, gainR, stereoMerger, monoGain, mainOutputGain;
 let postSplitter, postAnalyserL, postAnalyserR;
 let channelMode = 'stereo';
 let isMono = false;
@@ -915,6 +915,7 @@ function initWebAudio() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   mediaSource = audioCtx.createMediaElementSource(audioPlayer);
 
+  // Raw Track Splitter & Analysers (Unfiltered track data)
   rawSplitter = audioCtx.createChannelSplitter(2);
   analyserL = audioCtx.createAnalyser();
   analyserR = audioCtx.createAnalyser();
@@ -924,23 +925,30 @@ function initWebAudio() {
   rawSplitter.connect(analyserL, 0);
   rawSplitter.connect(analyserR, 1);
 
-  outSplitter = audioCtx.createChannelSplitter(2);
-  gainLL = audioCtx.createGain();
-  gainRR = audioCtx.createGain();
-  gainLR = audioCtx.createGain();
-  gainRL = audioCtx.createGain();
-  outMerger = audioCtx.createChannelMerger(2);
+  // Stereo Path (Splitter -> L/R Gains -> Merger)
+  stereoSplitter = audioCtx.createChannelSplitter(2);
+  gainL = audioCtx.createGain();
+  gainR = audioCtx.createGain();
+  stereoMerger = audioCtx.createChannelMerger(2);
 
-  mediaSource.connect(outSplitter);
-  outSplitter.connect(gainLL, 0);
-  outSplitter.connect(gainRR, 1);
-  outSplitter.connect(gainLR, 0);
-  outSplitter.connect(gainRL, 1);
+  mediaSource.connect(stereoSplitter);
+  stereoSplitter.connect(gainL, 0);
+  stereoSplitter.connect(gainR, 1);
+  gainL.connect(stereoMerger, 0, 0);
+  gainR.connect(stereoMerger, 0, 1);
 
-  gainLL.connect(outMerger, 0, 0);
-  gainRR.connect(outMerger, 0, 1);
-  gainLR.connect(outMerger, 0, 1);
-  gainRL.connect(outMerger, 0, 0);
+  // Dedicated Mono Path (Natively forced to 1-channel downmix by W3C spec - Cross-Browser Solution)
+  monoGain = audioCtx.createGain();
+  monoGain.channelCount = 1;
+  monoGain.channelCountMode = "explicit";
+  monoGain.channelInterpretation = "speakers";
+
+  mediaSource.connect(monoGain);
+
+  // Main Output Bus
+  mainOutputGain = audioCtx.createGain();
+  stereoMerger.connect(mainOutputGain);
+  monoGain.connect(mainOutputGain);
 
   // Post-Routing Splitter & Analysers for Goniometer Post-Routing Scope Mode
   postSplitter = audioCtx.createChannelSplitter(2);
@@ -949,41 +957,37 @@ function initWebAudio() {
   postAnalyserL.fftSize = 2048;
   postAnalyserR.fftSize = 2048;
 
-  outMerger.connect(postSplitter);
+  mainOutputGain.connect(postSplitter);
   postSplitter.connect(postAnalyserL, 0);
   postSplitter.connect(postAnalyserR, 1);
 
-  outMerger.connect(audioCtx.destination);
+  mainOutputGain.connect(audioCtx.destination);
 
   applyChannelRouting();
 }
 
 function applyChannelRouting() {
-  if (!gainLL || !audioCtx) return;
+  if (!gainL || !monoGain || !audioCtx) return;
   const t = audioCtx.currentTime;
 
   if (isMono) {
-    // True 100% Mono Summing: (L + R) / 2 sent identically to Left & Right speakers
-    gainLL.gain.setValueAtTime(0.5, t);
-    gainRR.gain.setValueAtTime(0.5, t);
-    gainLR.gain.setValueAtTime(0.5, t);
-    gainRL.gain.setValueAtTime(0.5, t);
+    // Turn ON Native Mono Path, Mute Stereo Path
+    gainL.gain.setValueAtTime(0.0, t);
+    gainR.gain.setValueAtTime(0.0, t);
+    monoGain.gain.setValueAtTime(1.0, t);
   } else {
+    // Turn OFF Mono Path, Activate Stereo Path
+    monoGain.gain.setValueAtTime(0.0, t);
+
     if (channelMode === 'stereo') {
-      gainLL.gain.setValueAtTime(1.0, t);
-      gainRR.gain.setValueAtTime(1.0, t);
-      gainLR.gain.setValueAtTime(0.0, t);
-      gainRL.gain.setValueAtTime(0.0, t);
+      gainL.gain.setValueAtTime(1.0, t);
+      gainR.gain.setValueAtTime(1.0, t);
     } else if (channelMode === 'left') {
-      gainLL.gain.setValueAtTime(1.0, t);
-      gainRR.gain.setValueAtTime(0.0, t);
-      gainLR.gain.setValueAtTime(0.0, t);
-      gainRL.gain.setValueAtTime(0.0, t);
+      gainL.gain.setValueAtTime(1.0, t);
+      gainR.gain.setValueAtTime(0.0, t);
     } else if (channelMode === 'right') {
-      gainLL.gain.setValueAtTime(0.0, t);
-      gainRR.gain.setValueAtTime(1.0, t);
-      gainLR.gain.setValueAtTime(0.0, t);
-      gainRL.gain.setValueAtTime(0.0, t);
+      gainL.gain.setValueAtTime(0.0, t);
+      gainR.gain.setValueAtTime(1.0, t);
     }
   }
 }
