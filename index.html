@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
-  <!-- Google tag (gtag.js) -->
+
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-REP3XJHRD5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -925,10 +925,10 @@ function initWebAudio() {
   rawSplitter.connect(analyserR, 1);
 
   outSplitter = audioCtx.createChannelSplitter(2);
-  gainLL = audioCtx.createGain(); gainLL.gain.value = 1;
-  gainRR = audioCtx.createGain(); gainRR.gain.value = 1;
-  gainLR = audioCtx.createGain(); gainLR.gain.value = 0;
-  gainRL = audioCtx.createGain(); gainRL.gain.value = 0;
+  gainLL = audioCtx.createGain();
+  gainRR = audioCtx.createGain();
+  gainLR = audioCtx.createGain();
+  gainRL = audioCtx.createGain();
   outMerger = audioCtx.createChannelMerger(2);
 
   mediaSource.connect(outSplitter);
@@ -936,6 +936,7 @@ function initWebAudio() {
   outSplitter.connect(gainRR, 1);
   outSplitter.connect(gainLR, 0);
   outSplitter.connect(gainRL, 1);
+
   gainLL.connect(outMerger, 0, 0);
   gainRR.connect(outMerger, 0, 1);
   gainLR.connect(outMerger, 0, 1);
@@ -958,21 +959,32 @@ function initWebAudio() {
 }
 
 function applyChannelRouting() {
-  if (!gainLL) return;
+  if (!gainLL || !audioCtx) return;
+  const t = audioCtx.currentTime;
+
   if (isMono) {
-    gainLL.gain.value = 0.5; gainRR.gain.value = 0.5;
-    gainLR.gain.value = 0.5; gainRL.gain.value = 0.5;
-    return;
-  }
-  if (channelMode === 'stereo') {
-    gainLL.gain.value = 1; gainRR.gain.value = 1;
-    gainLR.gain.value = 0; gainRL.gain.value = 0;
-  } else if (channelMode === 'left') {
-    gainLL.gain.value = 1; gainRR.gain.value = 0;
-    gainLR.gain.value = 0; gainRL.gain.value = 0;
-  } else if (channelMode === 'right') {
-    gainLL.gain.value = 0; gainRR.gain.value = 1;
-    gainLR.gain.value = 0; gainRL.gain.value = 0;
+    // True 100% Mono Summing: (L + R) / 2 sent identically to Left & Right speakers
+    gainLL.gain.setValueAtTime(0.5, t);
+    gainRR.gain.setValueAtTime(0.5, t);
+    gainLR.gain.setValueAtTime(0.5, t);
+    gainRL.gain.setValueAtTime(0.5, t);
+  } else {
+    if (channelMode === 'stereo') {
+      gainLL.gain.setValueAtTime(1.0, t);
+      gainRR.gain.setValueAtTime(1.0, t);
+      gainLR.gain.setValueAtTime(0.0, t);
+      gainRL.gain.setValueAtTime(0.0, t);
+    } else if (channelMode === 'left') {
+      gainLL.gain.setValueAtTime(1.0, t);
+      gainRR.gain.setValueAtTime(0.0, t);
+      gainLR.gain.setValueAtTime(0.0, t);
+      gainRL.gain.setValueAtTime(0.0, t);
+    } else if (channelMode === 'right') {
+      gainLL.gain.setValueAtTime(0.0, t);
+      gainRR.gain.setValueAtTime(1.0, t);
+      gainLR.gain.setValueAtTime(0.0, t);
+      gainRL.gain.setValueAtTime(0.0, t);
+    }
   }
 }
 
@@ -986,10 +998,12 @@ function updateChannelUI() {
 btnStereo.addEventListener('click', () => { channelMode = 'stereo'; updateChannelUI(); if (audioCtx) applyChannelRouting(); if (audioPlayer.paused) drawSpectrumAnalyzer(); });
 btnLeftOnly.addEventListener('click', () => { channelMode = 'left'; updateChannelUI(); if (audioCtx) applyChannelRouting(); if (audioPlayer.paused) drawSpectrumAnalyzer(); });
 btnRightOnly.addEventListener('click', () => { channelMode = 'right'; updateChannelUI(); if (audioCtx) applyChannelRouting(); if (audioPlayer.paused) drawSpectrumAnalyzer(); });
+
 btnMono.addEventListener('click', () => {
   isMono = !isMono;
   btnMono.innerText = isMono ? 'Mono: ON' : 'Mono: OFF';
   btnMono.classList.toggle('active', isMono);
+
   if (audioCtx) applyChannelRouting();
   if (audioPlayer.paused) drawGoniometer();
 });
