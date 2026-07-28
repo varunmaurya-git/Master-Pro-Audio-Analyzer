@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-REP3XJHRD5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-REP3XJHRD5');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Pro Audio Analyzer Suite</title>
+<style>
+:root {
+  --bg: #070611;
+  --panel-bg: #121124;
+  --accent-purple: #9d72ff;
+  --accent-cyan: #00f3ff;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --text-muted: #888799;
+  --text-bright: #ececff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-bright);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Author Header Banner */
+.header-branding {
+  width: 100%;
+  max-width: 1350px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 5px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+.header-credits {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.author-name {
+  color: var(--text-bright);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.free-badge {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.linkedin-link {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.linkedin-link:hover {
+  color: var(--accent-purple);
+  text-decoration: underline;
+}
+
+.top-bar {
+  width: 100%;
+  max-width: 1350px;
+  background: var(--panel-bg);
+  padding: 12px 20px;
+  border-radius: 8px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  border: 1px solid #232238;
+}
+
+input[type="file"], button, input[type="number"], input[type="range"] {
+  background: #1c1a30;
+  color: var(--text-bright);
+  border: 1px solid #3d3a61;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+input[type="number"] {
+  width: 85px !important;
+  text-align: center;
+}
+
+button:hover {
+  background: var(--accent-purple);
+  color: #000;
+  border-color: var(--accent-purple);
+}
+
+button.active {
+  background: var(--accent-purple) !important;
+  color: #000 !important;
+  border-color: var(--accent-purple) !important;
+}
+
+button.channel-active {
+  box-shadow: 0 0 8px var(--accent-cyan);
+  border-color: var(--accent-cyan) !important;
+}
+
+.scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  background: #040308;
+  border-radius: 6px;
+  border: 1px solid #1c1a2e;
+  position: relative;
+}
+
+.scroll-container::-webkit-scrollbar { height: 10px; }
+.scroll-container::-webkit-scrollbar-track { background: #090812; }
+.scroll-container::-webkit-scrollbar-thumb { background: #3d3a61; border-radius: 5px; }
+.scroll-container::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
+
+.waveform-section {
+  width: 100%;
+  max-width: 1350px;
+  background: var(--panel-bg);
+  border: 1px solid #232238;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+}
+
+.waveform-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zoom-control-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+}
+
+#waveformCanvas {
+  display: block;
+  height: 200px;
+  cursor: pointer;
+}
+
+.waveform-legend {
+  display: flex;
+  gap: 15px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-color { width: 12px; height: 12px; border-radius: 2px; }
+
+.dashboard-row {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 15px;
+  width: 100%;
+  max-width: 1350px;
+  margin-bottom: 15px;
+}
+
+.card {
+  background: var(--panel-bg);
+  border: 1px solid #232238;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#gonioCanvas {
+  background: #040308;
+  border-radius: 6px;
+  border: 1px solid #1c1a2e;
+}
+
+.phase-bar-wrapper { width: 100%; margin-top: 10px; }
+.phase-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 3px; }
+.phase-track { width: 100%; height: 8px; background: linear-gradient(to right, #ef4444, #eab308, #22c55e); border-radius: 4px; position: relative; }
+.phase-pointer { position: absolute; top: -2px; bottom: -2px; width: 4px; background: #fff; border-radius: 2px; left: 80%; transition: left 0.05s ease-out; }
+
+.rta-controls {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+#spectrumCanvas {
+  display: block;
+  height: 320px;
+  background: #040308;
+  cursor: crosshair;
+}
+
+.spectro-controls {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.spectro-controls label { font-size: 0.8rem; color: var(--text-muted); }
+
+.spectro-viewport-wrapper {
+  position: sticky;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.spectro-canvas {
+  display: block;
+  height: 300px;
+  background: #020204;
+  cursor: crosshair;
+  width: 100%;
+}
+
+.spectro-channel-label {
+  font-size: 0.8rem;
+  color: var(--accent-purple);
+  padding: 8px 0 4px 0;
+  font-weight: 600;
+}
+
+/* Explainer Section Styling */
+.explainer-card {
+  width: 100%;
+  max-width: 1350px;
+  background: var(--panel-bg);
+  border: 1px solid #232238;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-top: 15px;
+}
+.explainer-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-cyan);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.explainer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px;
+}
+.explainer-box {
+  background: #05040d;
+  border: 1px solid #1c1a2e;
+  border-radius: 6px;
+  padding: 12px;
+}
+.explainer-box h4 {
+  font-size: 0.8rem;
+  color: var(--accent-purple);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.explainer-box p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.explainer-box strong {
+  color: var(--text-bright);
+}
+
+audio { display: none; }
+
+/* Status Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(7, 6, 17, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.loading-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.loading-box {
+  background: var(--panel-bg);
+  border: 1px solid #3d3a61;
+  border-radius: 12px;
+  padding: 25px 30px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+}
+.loading-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--accent-cyan);
+}
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background: #040308;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 15px 0 10px 0;
+  border: 1px solid #232238;
+}
+.progress-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+  transition: width 0.08s ease-out;
+}
+.loading-status {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Full Page Drag & Drop Overlay */
+.drop-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(7, 6, 17, 0.88);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  border: 3px dashed var(--accent-cyan);
+}
+.drop-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.drop-box {
+  text-align: center;
+  color: var(--accent-cyan);
+}
+.drop-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.drop-sub {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<audio id="audioPlayer" crossorigin="anonymous"></audio>
+
+<div id="dropOverlay" class="drop-overlay">
+  <div class="drop-box">
+    <div class="drop-title">Drop Audio File Here</div>
+    <div class="drop-sub">Release to analyze track</div>
+  </div>
+</div>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-box">
+    <div class="loading-title">Analyzing Audio Track</div>
+    <div class="progress-bar-container">
+      <div id="progressBar" class="progress-bar-fill"></div>
+    </div>
+    <div id="loadingStatus" class="loading-status">Decoding audio buffer...</div>
+  </div>
+</div>
+
+<!-- Header Branding with Author Credits -->
+<div class="header-branding">
+  <div class="header-title">Master Pro Audio Analyzer Suite</div>
+  <div class="header-credits">
+    <span>Created by <span class="author-name">VARUN MAURYA</span></span>
+    <span>&bull;</span>
+    <span class="free-badge">FREE FOR EVERYONE</span>
+    <span>&bull;</span>
+    <a href="www.linkedin.com/in/maurya-varun" target="_blank" rel="noopener noreferrer" class="linkedin-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+      LinkedIn Profile
+    </a>
+  </div>
+</div>
+
+<div class="top-bar">
+  <input type="file" id="fileInput" accept="audio/*">
+  <button id="btnPlayPause" disabled>Play</button>
+  <span style="color:#444;margin:0 4px;">| Channel:</span>
+  <button id="btnStereo" class="channel-active">Stereo</button>
+  <button id="btnLeftOnly">Left Only</button>
+  <button id="btnRightOnly">Right Only</button>
+  <button id="btnMono">Mono: OFF</button>
+  <span id="fileNameDisplay" style="font-size:0.85rem; color:#888;">Select or drop an audio file to begin analysis (Spacebar = Play/Pause).</span>
+</div>
+
+<div class="waveform-section">
+  <div class="waveform-header">
+    <span>Stereo Width & Phase Correlation Overview</span>
+    <div class="zoom-control-inline">
+      <label for="waveZoom">Horizontal Zoom (1x - 25x):</label>
+      <input type="range" id="waveZoom" min="1" max="25" step="0.5" value="1" style="width:160px;">
+      <span id="timeText">00:00 / 00:00</span>
+    </div>
+  </div>
+  <div class="scroll-container" id="waveScrollArea">
+    <canvas id="waveformCanvas" height="200"></canvas>
+  </div>
+  <div class="waveform-legend">
+    <div class="legend-item"><div class="legend-color" style="background:#888;"></div> Height = Total Amplitude</div>
+    <div class="legend-item"><div class="legend-color" style="background:#22c55e;"></div> Green = In-Phase</div>
+    <div class="legend-item"><div class="legend-color" style="background:#eab308;"></div> Yellow = Wide Stereo</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ef4444;"></div> Red = Anti-Phase (Collapses in Mono)</div>
+  </div>
+</div>
+
+<div class="dashboard-row">
+  <div class="card">
+    <div class="card-title">
+      <span>Goniometer / Phase Scope</span>
+      <button id="btnGonioScopeMode" style="font-size:0.7rem; padding:2px 8px; font-weight:600;">Scope: Raw Track View</button>
+    </div>
+    <canvas id="gonioCanvas" width="330" height="300"></canvas>
+    <div class="phase-bar-wrapper">
+      <div class="phase-labels"><span>-1 (Out)</span><span>0 (Mono)</span><span>+1 (In)</span></div>
+      <div class="phase-track"><div class="phase-pointer" id="phasePointer"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Logarithmic Spectrum Analyzer (RTA)</div>
+    <div class="rta-controls">
+      <label>Min Hz:</label>
+      <input type="number" id="rtaMinInput" value="20" min="0" max="20000">
+      <label>Max Hz:</label>
+      <input type="number" id="rtaMaxInput" value="20000" min="0" max="20000">
+      <span style="color:#444; margin:0 5px;">| Presets:</span>
+      <button id="rtaPresetFull" class="active">Full Range</button>
+      <button id="rtaPresetBass">Bass</button>
+      <button id="rtaPresetMids">Mids</button>
+      <button id="rtaPresetHighs">Highs</button>
+    </div>
+    <div class="scroll-container" id="rtaScrollArea">
+      <canvas id="spectrumCanvas" height="320"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="width:100%; max-width:1350px;">
+  <div class="card-title">Interactive Spectrogram</div>
+  <div class="spectro-controls">
+    <label>Min Hz:</label>
+    <input type="number" id="numMinHz" value="20" min="0" max="19900">
+    <input type="range" id="sliderMinHz" min="0" max="19900" step="50" value="20" style="width:100px;">
+    <label style="margin-left:6px;">Max Hz:</label>
+    <input type="number" id="numMaxHz" value="20000" min="100" max="20000">
+    <input type="range" id="sliderMaxHz" min="100" max="20000" step="50" value="20000" style="width:100px;">
+    <label style="margin-left:8px; color:var(--accent-cyan);">Zoom (1x - 64x):</label>
+    <input type="range" id="spectroTimeZoom" min="1" max="64" step="0.5" value="1" style="width:110px;">
+    <label style="margin-left:8px; color:#ffb703;">Gain:</label>
+    <input type="range" id="spectroGain" min="0.5" max="3.5" step="0.1" value="1.2" style="width:80px;">
+    <span style="color:#444; margin:0 2px;">| Scale:</span>
+    <button id="btnScaleMel" class="active">Mel Scale</button>
+    <button id="btnScaleLinear">Linear</button>
+    <span style="color:#444; margin:0 2px;">| Presets:</span>
+    <button id="presetFull" class="active">Full Range</button>
+    <button id="preset100_3k">100Hz - 3kHz</button>
+  </div>
+
+  <div class="scroll-container" id="specScrollArea">
+    <div id="specSpacer" style="width:100%; height:1px;"></div>
+    <div class="spectro-viewport-wrapper">
+      <div class="spectro-channel-label">LEFT CHANNEL</div>
+      <canvas id="specL" class="spectro-canvas" height="300"></canvas>
+      <div class="spectro-channel-label">RIGHT CHANNEL</div>
+      <canvas id="specR" class="spectro-canvas" height="300"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="explainer-card">
+  <div class="explainer-title">Quick Reference & Module Functions Guide</div>
+  <div class="explainer-grid">
+    <div class="explainer-box">
+      <h4>1. Control Bar & Routing</h4>
+      <p>Load audio via file selection or full-page drag & drop. Toggle playback with <strong>Spacebar</strong>. Select <strong>Left Only</strong> or <strong>Right Only</strong> to isolate channels, or turn <strong>Mono: ON</strong> to audition mono-compatibility.</p>
+    </div>
+    <div class="explainer-box">
+      <h4>2. Stereo Waveform Overview</h4>
+      <p>Visualizes track amplitude over time. Bar colors reveal phase health: <strong>Green</strong> = In-Phase, <strong>Yellow</strong> = Wide Stereo, and <strong>Red</strong> = Out-of-Phase / Anti-Phase (risk of mono cancellation).</p>
+    </div>
+    <div class="explainer-box">
+      <h4>3. Goniometer / Phase Scope</h4>
+      <p>Shows 2D stereo soundfield distribution and phase correlation meter. Switch between <strong>Scope: Raw Track View</strong> (unfiltered stereo audio file) and <strong>Scope: Post Mono ON Routing View</strong> (monitored signal that collapses visually into a straight vertical line in mono mode).</p>
+    </div>
+    <div class="explainer-box">
+      <h4>4. Spectrum Analyzer (RTA)</h4>
+      <p>Real-time frequency response curves for <strong>Left</strong> (Cyan) and <strong>Right</strong> (Magenta) channels. Automatically tracks isolated single channels when Left/Right Only is selected. Features logarithmic Hz bounds & frequency presets.</p>
+    </div>
+    <div class="explainer-box">
+      <h4>5. Interactive Spectrogram</h4>
+      <p>High-resolution 4096-FFT dual-channel spectral visualizer. Features Mel & Linear frequency scaling, 64x horizontal zoom, variable gain boost, and crosshair frequency/timestamp reading.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ZERO-ALLOCATION RADIX-2 FAST FFT CLASS
+class FastFFT {
+  constructor(size) {
+    this.size = size;
+    this.halfSize = size >>> 1;
+    this.reverseTable = new Uint32Array(size);
+    this.cosTable = new Float32Array(this.halfSize);
+    this.sinTable = new Float32Array(this.halfSize);
+
+    this.real = new Float32Array(size);
+    this.imag = new Float32Array(size);
+
+    let limit = 1;
+    let bit = size >> 1;
+    while (limit < size) {
+      for (let i = 0; i < limit; i++) {
+        this.reverseTable[i + limit] = this.reverseTable[i] + bit;
+      }
+      limit <<= 1;
+      bit >>= 1;
+    }
+
+    for (let i = 0; i < this.halfSize; i++) {
+      const angle = -2 * Math.PI * i / size;
+      this.cosTable[i] = Math.cos(angle);
+      this.sinTable[i] = Math.sin(angle);
+    }
+  }
+
+  transform(realIn, windowTable, magnitudeOut) {
+    const n = this.size;
+    const real = this.real;
+    const imag = this.imag;
+
+    for (let i = 0; i < n; i++) {
+      const rev = this.reverseTable[i];
+      real[rev] = (realIn[i] || 0) * windowTable[i];
+      imag[rev] = 0;
+    }
+
+    for (let len = 2; len <= n; len <<= 1) {
+      const halfLen = len >> 1;
+      const step = n / len;
+      for (let i = 0; i < n; i += len) {
+        for (let j = 0; j < halfLen; j++) {
+          const k = j * step;
+          const re = real[i + j + halfLen] * this.cosTable[k] - imag[i + j + halfLen] * this.sinTable[k];
+          const im = real[i + j + halfLen] * this.sinTable[k] + imag[i + j + halfLen] * this.cosTable[k];
+
+          real[i + j + halfLen] = real[i + j] - re;
+          imag[i + j + halfLen] = imag[i + j] - im;
+          real[i + j] += re;
+          imag[i + j] += im;
+        }
+      }
+    }
+
+    const half = this.halfSize;
+    for (let k = 0; k < half; k++) {
+      const r = real[k];
+      const m = imag[k];
+      magnitudeOut[k] = Math.min(255, Math.sqrt(r * r + m * m) * 4.0);
+    }
+  }
+}
+
+// Worker Blob String
+const workerCode = `
+${FastFFT.toString()}
+
+self.onmessage = function(e) {
+  const { dataL, dataR, FFT_SIZE, HOP_SIZE } = e.data;
+  const totalSamples = dataL.length;
+  const HALF_FFT = FFT_SIZE >>> 1;
+
+  if (totalSamples < FFT_SIZE) {
+    self.postMessage({ type: 'done', fullTrackSpecL: new Float32Array(0), fullTrackSpecR: new Float32Array(0), cols: 0, halfFFT: HALF_FFT });
+    return;
+  }
+
+  const cols = Math.floor((totalSamples - FFT_SIZE) / HOP_SIZE);
+  const fastFFT = new FastFFT(FFT_SIZE);
+
+  const hannWindow = new Float32Array(FFT_SIZE);
+  for (let n = 0; n < FFT_SIZE; n++) {
+    hannWindow[n] = 0.5 * (1 - Math.cos(2 * Math.PI * n / (FFT_SIZE - 1)));
+  }
+
+  const colDataL = new Float32Array(FFT_SIZE);
+  const colDataR = new Float32Array(FFT_SIZE);
+
+  const fullTrackSpecL = new Float32Array(cols * HALF_FFT);
+  const fullTrackSpecR = new Float32Array(cols * HALF_FFT);
+
+  const binsL = new Float32Array(HALF_FFT);
+  const binsR = new Float32Array(HALF_FFT);
+
+  const reportChunk = Math.max(1, Math.floor(cols / 40));
+
+  for (let x = 0; x < cols; x++) {
+    const startIdx = x * HOP_SIZE;
+    for (let n = 0; n < FFT_SIZE; n++) {
+      colDataL[n] = dataL[startIdx + n] || 0;
+      colDataR[n] = dataR[startIdx + n] || 0;
+    }
+
+    fastFFT.transform(colDataL, hannWindow, binsL);
+    fastFFT.transform(colDataR, hannWindow, binsR);
+
+    const offset = x * HALF_FFT;
+    fullTrackSpecL.set(binsL, offset);
+    fullTrackSpecR.set(binsR, offset);
+
+    if (x % reportChunk === 0 || x === cols - 1) {
+      const pct = Math.round((x / cols) * 100);
+      self.postMessage({ type: 'progress', percent: pct });
+    }
+  }
+
+  self.postMessage({
+    type: 'done',
+    fullTrackSpecL,
+    fullTrackSpecR,
+    cols,
+    halfFFT: HALF_FFT
+  }, [fullTrackSpecL.buffer, fullTrackSpecR.buffer]);
+};
+`;
+
+const workerBlob = new Blob([workerCode], { type: 'application/javascript' });
+const workerUrl = URL.createObjectURL(workerBlob);
+let fftWorker = null;
+
+// Audio Context & State
+const audioPlayer = document.getElementById('audioPlayer');
+let audioCtx, mediaSource, rawSplitter, analyserL, analyserR;
+let outSplitter, gainLL, gainRR, gainLR, gainRL, outMerger;
+let postSplitter, postAnalyserL, postAnalyserR;
+let channelMode = 'stereo';
+let isMono = false;
+let gonioScopeMode = 'raw'; // 'raw' or 'post'
+let decodedAudioBuffer = null;
+let currentObjectUrl = null;
+let isSeekingWave = false;
+let isSeekingSpec = false;
+let animFrameId = null;
+
+let currentMinHz = 20;
+let currentMaxHz = 20000;
+let spectroZoomFactor = 1.0;
+let spectroGainVal = 1.2;
+let useMelScale = true;
+
+let rtaMinFreq = 20;
+let rtaMaxFreq = 20000;
+let rtaCanvasWidth = 900;
+
+let waveZoomFactor = 1.0;
+let waveBaseWidth = 1320;
+
+// Throttled 25 FPS
+let lastRenderTime = 0;
+const TARGET_FPS = 25;
+const FRAME_INTERVAL = 1000 / TARGET_FPS; 
+
+// Upgraded to 4096-Point FFT (2048 Bins = 10.7 Hz/bin Frequency Resolution)
+const FFT_SIZE = 4096;
+const HALF_FFT = FFT_SIZE >>> 1;
+
+let fullTrackSpecL = null;
+let fullTrackSpecR = null;
+let specCols = 0;
+let specHalfFFT = HALF_FFT;
+
+const loadingOverlay = document.getElementById('loadingOverlay');
+const progressBar = document.getElementById('progressBar');
+const loadingStatus = document.getElementById('loadingStatus');
+const dropOverlay = document.getElementById('dropOverlay');
+
+function showLoading(msg) {
+  loadingStatus.innerText = msg;
+  progressBar.style.width = '0%';
+  loadingOverlay.classList.add('active');
+}
+
+function updateLoading(pct, msg) {
+  if (msg) loadingStatus.innerText = msg;
+  progressBar.style.width = pct + '%';
+}
+
+function hideLoading() {
+  loadingOverlay.classList.remove('active');
+}
+
+function hzToMel(hz) { return 2595 * Math.log10(1 + Math.max(0, hz) / 700); }
+function melToHz(mel) { return 700 * (Math.pow(10, Math.max(0, mel) / 2595) - 1); }
+
+// High Precision 1024-Level Palette
+const colLUT = [];
+(function buildColorLUT() {
+  const stops = [
+    [0.00, [4, 2, 14]],      // Deep black/purple
+    [0.05, [18, 8, 48]],     // Indigo
+    [0.12, [42, 12, 95]],    // Violet
+    [0.20, [85, 18, 135]],   // Purple
+    [0.30, [140, 25, 140]],  // Magenta
+    [0.40, [190, 38, 110]],  // Crimson
+    [0.50, [225, 65, 70]],   // Orange Red
+    [0.60, [245, 105, 40]],  // Orange
+    [0.70, [255, 155, 25]],  // Gold
+    [0.80, [255, 200, 35]],  // Yellow
+    [0.90, [255, 235, 110]], // Lemon
+    [1.00, [255, 255, 230]]  // White peak
+  ];
+  const LUT_SIZE = 1024;
+  for (let v = 0; v < LUT_SIZE; v++) {
+    const t = v / (LUT_SIZE - 1);
+    let c = [0, 0, 0];
+    for (let s = 0; s < stops.length - 1; s++) {
+      if (t >= stops[s][0] && t <= stops[s + 1][0]) {
+        const f = (t - stops[s][0]) / (stops[s + 1][0] - stops[s][0]);
+        c = [
+          Math.round(stops[s][1][0] + (stops[s + 1][1][0] - stops[s][1][0]) * f),
+          Math.round(stops[s][1][1] + (stops[s + 1][1][1] - stops[s][1][1]) * f),
+          Math.round(stops[s][1][2] + (stops[s + 1][1][2] - stops[s][1][2]) * f)
+        ];
+        break;
+      }
+    }
+    colLUT.push(c);
+  }
+})();
+
+const offscreenSpecL = document.createElement('canvas');
+const offscreenSpecR = document.createElement('canvas');
+const offscreenWaveCanvas = document.createElement('canvas');
+
+let hoverSpectro = { canvas: null, x: -1, y: -1, isLeft: true };
+let hoverRTA = { x: -1, y: -1, active: false };
+
+const fileInput = document.getElementById('fileInput');
+const btnPlayPause = document.getElementById('btnPlayPause');
+const btnMono = document.getElementById('btnMono');
+const btnStereo = document.getElementById('btnStereo');
+const btnLeftOnly = document.getElementById('btnLeftOnly');
+const btnRightOnly = document.getElementById('btnRightOnly');
+const btnGonioScopeMode = document.getElementById('btnGonioScopeMode');
+const fileNameDisplay = document.getElementById('fileNameDisplay');
+const timeText = document.getElementById('timeText');
+const phasePointer = document.getElementById('phasePointer');
+
+const waveZoom = document.getElementById('waveZoom');
+const numMinHz = document.getElementById('numMinHz');
+const sliderMinHz = document.getElementById('sliderMinHz');
+const numMaxHz = document.getElementById('numMaxHz');
+const sliderMaxHz = document.getElementById('sliderMaxHz');
+const spectroTimeZoom = document.getElementById('spectroTimeZoom');
+const spectroGain = document.getElementById('spectroGain');
+const btnScaleMel = document.getElementById('btnScaleMel');
+const btnScaleLinear = document.getElementById('btnScaleLinear');
+const rtaMinInput = document.getElementById('rtaMinInput');
+const rtaMaxInput = document.getElementById('rtaMaxInput');
+
+const waveCanvas = document.getElementById('waveformCanvas');
+const waveCtx = waveCanvas.getContext('2d');
+const gonioCanvas = document.getElementById('gonioCanvas');
+const gonioCtx = gonioCanvas.getContext('2d');
+const specCanvas = document.getElementById('spectrumCanvas');
+const specCtx = specCanvas.getContext('2d');
+const specLCanvas = document.getElementById('specL');
+const specLCtx = specLCanvas.getContext('2d');
+const specRCanvas = document.getElementById('specR');
+const specRCtx = specRCanvas.getContext('2d');
+const waveScrollArea = document.getElementById('waveScrollArea');
+const rtaScrollArea = document.getElementById('rtaScrollArea');
+const specScrollArea = document.getElementById('specScrollArea');
+const specSpacer = document.getElementById('specSpacer');
+
+// Spacebar Key Listener for Play / Pause
+window.addEventListener('keydown', (e) => {
+  const activeEl = document.activeElement;
+  if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
+    if (activeEl.type === 'number' || activeEl.type === 'text') {
+      return;
+    }
+  }
+
+  if (e.code === 'Space' || e.key === ' ') {
+    e.preventDefault();
+    if (!btnPlayPause.disabled) {
+      btnPlayPause.click();
+    }
+  }
+});
+
+function initWebAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  mediaSource = audioCtx.createMediaElementSource(audioPlayer);
+
+  rawSplitter = audioCtx.createChannelSplitter(2);
+  analyserL = audioCtx.createAnalyser();
+  analyserR = audioCtx.createAnalyser();
+  analyserL.fftSize = 2048;
+  analyserR.fftSize = 2048;
+  mediaSource.connect(rawSplitter);
+  rawSplitter.connect(analyserL, 0);
+  rawSplitter.connect(analyserR, 1);
+
+  outSplitter = audioCtx.createChannelSplitter(2);
+  gainLL = audioCtx.createGain(); gainLL.gain.value = 1;
+  gainRR = audioCtx.createGain(); gainRR.gain.value = 1;
+  gainLR = audioCtx.createGain(); gainLR.gain.value = 0;
+  gainRL = audioCtx.createGain(); gainRL.gain.value = 0;
+  outMerger = audioCtx.createChannelMerger(2);
+
+  mediaSource.connect(outSplitter);
+  outSplitter.connect(gainLL, 0);
+  outSplitter.connect(gainRR, 1);
+  outSplitter.connect(gainLR, 0);
+  outSplitter.connect(gainRL, 1);
+  gainLL.connect(outMerger, 0, 0);
+  gainRR.connect(outMerger, 0, 1);
+  gainLR.connect(outMerger, 0, 1);
+  gainRL.connect(outMerger, 0, 0);
+
+  // Post-Routing Splitter & Analysers for Goniometer Post-Routing Scope Mode
+  postSplitter = audioCtx.createChannelSplitter(2);
+  postAnalyserL = audioCtx.createAnalyser();
+  postAnalyserR = audioCtx.createAnalyser();
+  postAnalyserL.fftSize = 2048;
+  postAnalyserR.fftSize = 2048;
+
+  outMerger.connect(postSplitter);
+  postSplitter.connect(postAnalyserL, 0);
+  postSplitter.connect(postAnalyserR, 1);
+
+  outMerger.connect(audioCtx.destination);
+
+  applyChannelRouting();
+}
+
+function applyChannelRouting() {
+  if (!gainLL) return;
+  if (isMono) {
+    gainLL.gain.value = 0.5; gainRR.gain.value = 0.5;
+    gainLR.gain.value = 0.5; gainRL.gain.value = 0.5;
+    return;
+  }
+  if (channelMode === 'stereo') {
+    gainLL.gain.value = 1; gainRR.gain.value = 1;
+    gainLR.gain.value = 0; gainRL.gain.value = 0;
+  } else if (channelMode === 'left') {
+    gainLL.gain.value = 1; gainRR.gain.value = 0;
+    gainLR.gain.value = 0; gainRL.gain.value = 0;
+  } else if (channelMode === 'right') {
+    gainLL.gain.value = 0; gainRR.gain.value = 1;
+    gainLR.gain.value = 0; gainRL.gain.value = 0;
+  }
+}
+
+function updateChannelUI() {
+  [btnStereo, btnLeftOnly, btnRightOnly].forEach(b => b.classList.remove('channel-active'));
+  if (channelMode === 'stereo') btnStereo.classList.add('channel-active');
+  else if (channelMode === 'left') btnLeftOnly.classList.add('channel-active');
+  else if (channelMode === 'right') btnRightOnly.classList.add('channel-active');
+}
+
+btnStereo.addEventListener('click', () => { channelMode = 'stereo'; updateChannelUI(); if (audioCtx) applyChannelRouting(); if (audioPlayer.paused) drawSpectrumAnalyzer(); });
+btnLeftOnly.addEventListener('click', () => { channelMode = 'left'; updateChannelUI(); if (audioCtx) applyChannelRouting(); if (audioPlayer.paused) drawSpectrumAnalyzer(); });
+btnRightOnly.addEventListener('click', () => { channelMode = 'right'; updateChannelUI(); if (audioCtx) applyChannelRouting(); if (audioPlayer.paused) drawSpectrumAnalyzer(); });
+btnMono.addEventListener('click', () => {
+  isMono = !isMono;
+  btnMono.innerText = isMono ? 'Mono: ON' : 'Mono: OFF';
+  btnMono.classList.toggle('active', isMono);
+  if (audioCtx) applyChannelRouting();
+  if (audioPlayer.paused) drawGoniometer();
+});
+
+btnGonioScopeMode.addEventListener('click', () => {
+  if (gonioScopeMode === 'raw') {
+    gonioScopeMode = 'post';
+    btnGonioScopeMode.innerText = 'Scope: Post Mono ON Routing View';
+    btnGonioScopeMode.classList.add('active');
+  } else {
+    gonioScopeMode = 'raw';
+    btnGonioScopeMode.innerText = 'Scope: Raw Track View';
+    btnGonioScopeMode.classList.remove('active');
+  }
+  if (audioPlayer.paused) drawGoniometer();
+});
+
+function getContainerWidth(el) {
+  const rect = el.getBoundingClientRect();
+  const cs = getComputedStyle(el);
+  const padL = parseFloat(cs.paddingLeft) || 0;
+  const padR = parseFloat(cs.paddingRight) || 0;
+  return Math.max(200, Math.floor(rect.width - padL - padR - 2));
+}
+
+function updateRTACanvasWidth() {
+  rtaCanvasWidth = getContainerWidth(rtaScrollArea);
+  specCanvas.width = rtaCanvasWidth;
+  specCanvas.style.width = rtaCanvasWidth + 'px';
+}
+
+async function loadAudioFile(file) {
+  if (!file) return;
+
+  try {
+    showLoading("Initializing Web Audio...");
+    initWebAudio();
+
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+
+    if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = URL.createObjectURL(file);
+    audioPlayer.src = currentObjectUrl;
+
+    fileNameDisplay.innerText = `Analyzing "${file.name}"...`;
+    btnPlayPause.disabled = true;
+
+    showLoading("Decoding audio file...");
+    const arrayBuffer = await file.arrayBuffer();
+    decodedAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+    waveBaseWidth = getContainerWidth(waveScrollArea);
+    updateRTACanvasWidth();
+
+    updateLoading(20, "Building Stereo Waveform...");
+    renderDarwinWaveformToOffscreen();
+
+    updateLoading(35, "HD 4096-FFT Spectral Analysis...");
+
+    processSpectrogramData(decodedAudioBuffer, () => {
+      fileNameDisplay.innerText = file.name;
+      btnPlayPause.disabled = false;
+      btnPlayPause.innerText = 'Pause';
+      hideLoading();
+
+      audioPlayer.play().then(() => {
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+        renderLoop();
+      }).catch(err => {
+        console.log("Autoplay blocked, press Play/Spacebar:", err);
+        btnPlayPause.innerText = 'Play';
+        updateOverlays();
+        drawGoniometer();
+        drawSpectrumAnalyzer();
+      });
+    });
+
+  } catch (err) {
+    console.error("File loading error:", err);
+    hideLoading();
+    alert("Could not decode audio file: " + (err.message || err));
+  }
+}
+
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) {
+    loadAudioFile(e.target.files[0]);
+  }
+});
+
+// FULL-PAGE DRAG AND DROP HANDLERS
+window.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  dropOverlay.classList.add('active');
+});
+
+window.addEventListener('dragleave', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+    dropOverlay.classList.remove('active');
+  }
+});
+
+window.addEventListener('drop', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  dropOverlay.classList.remove('active');
+  if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    loadAudioFile(e.dataTransfer.files[0]);
+  }
+});
+
+btnPlayPause.addEventListener('click', () => {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    btnPlayPause.innerText = 'Pause';
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+    renderLoop();
+  } else {
+    audioPlayer.pause();
+    btnPlayPause.innerText = 'Play';
+  }
+});
+
+// ZOOM WITH PLAYHEAD CENTER LOCK
+waveZoom.addEventListener('input', () => {
+  waveZoomFactor = parseFloat(waveZoom.value);
+  if (!decodedAudioBuffer) return;
+
+  const pct = audioPlayer.duration ? (audioPlayer.currentTime / audioPlayer.duration) : 0;
+  renderDarwinWaveformToOffscreen();
+
+  const targetW = waveCanvas.width;
+  const containerW = waveScrollArea.clientWidth;
+  waveScrollArea.scrollLeft = Math.max(0, (pct * targetW) - (containerW / 2));
+});
+
+spectroTimeZoom.addEventListener('input', () => {
+  spectroZoomFactor = parseFloat(spectroTimeZoom.value);
+  if (!specCols) return;
+
+  const pct = audioPlayer.duration ? (audioPlayer.currentTime / audioPlayer.duration) : 0;
+  const viewportW = getContainerWidth(specScrollArea);
+  const totalTrackWidth = Math.max(viewportW, Math.floor(viewportW * spectroZoomFactor));
+
+  specSpacer.style.width = totalTrackWidth + 'px';
+  specScrollArea.scrollLeft = Math.max(0, (pct * totalTrackWidth) - (viewportW / 2));
+
+  renderSpectrogramViewport();
+});
+
+function renderDarwinWaveformToOffscreen() {
+  if (!decodedAudioBuffer) return;
+  const baseW = waveBaseWidth;
+  const targetW = Math.max(baseW, Math.floor(baseW * waveZoomFactor));
+  offscreenWaveCanvas.width = targetW;
+  offscreenWaveCanvas.height = 200;
+  waveCanvas.width = targetW;
+  waveCanvas.style.width = targetW + 'px';
+  const ctx = offscreenWaveCanvas.getContext('2d');
+  const h = 200;
+  ctx.clearRect(0, 0, targetW, h);
+
+  const dataL = decodedAudioBuffer.getChannelData(0);
+  const dataR = decodedAudioBuffer.numberOfChannels > 1 ? decodedAudioBuffer.getChannelData(1) : dataL;
+  const step = Math.max(1, Math.floor(dataL.length / targetW));
+  const centerY = h / 2;
+  const slices = new Array(targetW);
+  let maxTotalRMS = 0.0001;
+
+  for (let x = 0; x < targetW; x++) {
+    let sumL2 = 0, sumR2 = 0, sumLR = 0;
+    let count = 0;
+    const start = x * step;
+    const end = Math.min(dataL.length, start + step);
+    const batchSize = Math.max(1, Math.floor((end - start) / 16));
+
+    for (let j = start; j < end; j += batchSize) {
+      const l = dataL[j] || 0;
+      const r = dataR[j] || 0;
+      sumL2 += l * l;
+      sumR2 += r * r;
+      sumLR += l * r;
+      count++;
+    }
+
+    if (count === 0) { slices[x] = { rmsTotal: 0, corr: 1 }; continue; }
+    const rmsTotal = Math.sqrt((sumL2 + sumR2) / (2 * count));
+    const denom = Math.sqrt(sumL2 * sumR2);
+    const corr = denom === 0 ? 1 : Math.max(-1, Math.min(1, (sumLR / denom)));
+    if (rmsTotal > maxTotalRMS) maxTotalRMS = rmsTotal;
+    slices[x] = { rmsTotal, corr };
+  }
+
+  const scaleFactor = maxTotalRMS > 0 ? (h * 0.88) / maxTotalRMS : 1;
+  for (let x = 0; x < targetW; x++) {
+    const { rmsTotal, corr } = slices[x];
+    const barHeight = Math.max(2, rmsTotal * scaleFactor);
+
+    let color = '#22c55e'; // Green: In-Phase
+    if (corr < 0) color = '#ef4444'; // Red: Out-of-Phase / Anti-Phase
+    else if (corr < 0.5) color = '#eab308'; // Yellow: Wide Stereo
+
+    ctx.fillStyle = color;
+    ctx.fillRect(x, centerY - barHeight / 2, 1, barHeight);
+  }
+  updateOverlays();
+}
+
+// HIGH-DENSITY SPECTROGRAM PROCESSOR (Up to 32,000 Columns)
+function processSpectrogramData(buffer, onComplete) {
+  const dataL = buffer.getChannelData(0);
+  const dataR = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : dataL;
+  const totalSamples = dataL.length;
+
+  if (totalSamples < FFT_SIZE) {
+    fullTrackSpecL = new Float32Array(0);
+    fullTrackSpecR = new Float32Array(0);
+    specCols = 0;
+    if (onComplete) onComplete();
+    return;
+  }
+
+  // Generate 32,000 high-density columns across track
+  const targetCols = Math.min(32000, Math.max(4000, Math.floor(totalSamples / 128)));
+  const hopSize = Math.max(64, Math.floor((totalSamples - FFT_SIZE) / targetCols));
+  const cols = Math.floor((totalSamples - FFT_SIZE) / hopSize);
+  const halfFFT = HALF_FFT;
+
+  const isFileProtocol = (window.location.protocol === 'file:');
+
+  if (isFileProtocol || typeof Worker === 'undefined') {
+    runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
+    return;
+  }
+
+  let workerFinished = false;
+
+  try {
+    if (fftWorker) fftWorker.terminate();
+    fftWorker = new Worker(workerUrl);
+
+    const fallbackTimer = setTimeout(() => {
+      if (!workerFinished) {
+        console.warn("Worker timeout guard triggered, completing on main thread...");
+        if (fftWorker) fftWorker.terminate();
+        fftWorker = null;
+        runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
+      }
+    }, 2500);
+
+    fftWorker.onmessage = function(e) {
+      if (e.data.type === 'progress') {
+        const p = 35 + Math.round(e.data.percent * 0.60);
+        updateLoading(p, `Analyzing 4096-FFT Spectrum (${e.data.percent}%)...`);
+      } else if (e.data.type === 'done') {
+        workerFinished = true;
+        clearTimeout(fallbackTimer);
+        fullTrackSpecL = e.data.fullTrackSpecL;
+        fullTrackSpecR = e.data.fullTrackSpecR;
+        specCols = e.data.cols;
+        specHalfFFT = e.data.halfFFT;
+
+        updateLoading(100, "Analysis Complete!");
+        setTimeout(() => {
+          renderSpectrogramViewport();
+          if (onComplete) onComplete();
+        }, 50);
+      }
+    };
+
+    fftWorker.onerror = function() {
+      if (!workerFinished) {
+        workerFinished = true;
+        clearTimeout(fallbackTimer);
+        if (fftWorker) fftWorker.terminate();
+        fftWorker = null;
+        runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
+      }
+    };
+
+    fftWorker.postMessage({ dataL, dataR, FFT_SIZE, HOP_SIZE: hopSize });
+
+  } catch (e) {
+    console.warn("Worker creation error, running fast fallback:", e);
+    runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
+  }
+}
+
+function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete) {
+  const fastFFT = new FastFFT(FFT_SIZE);
+  const hannWindow = new Float32Array(FFT_SIZE);
+  for (let n = 0; n < FFT_SIZE; n++) {
+    hannWindow[n] = 0.5 * (1 - Math.cos(2 * Math.PI * n / (FFT_SIZE - 1)));
+  }
+
+  fullTrackSpecL = new Float32Array(cols * halfFFT);
+  fullTrackSpecR = new Float32Array(cols * halfFFT);
+  specCols = cols;
+  specHalfFFT = halfFFT;
+
+  const colDataL = new Float32Array(FFT_SIZE);
+  const colDataR = new Float32Array(FFT_SIZE);
+  const binsL = new Float32Array(halfFFT);
+  const binsR = new Float32Array(halfFFT);
+
+  let x = 0;
+  const CHUNK_SIZE = 1200; 
+
+  function processChunk() {
+    const end = Math.min(cols, x + CHUNK_SIZE);
+
+    for (; x < end; x++) {
+      const startIdx = x * hopSize;
+      for (let n = 0; n < FFT_SIZE; n++) {
+        colDataL[n] = dataL[startIdx + n] || 0;
+        colDataR[n] = dataR[startIdx + n] || 0;
+      }
+
+      fastFFT.transform(colDataL, hannWindow, binsL);
+      fastFFT.transform(colDataR, hannWindow, binsR);
+
+      const offset = x * halfFFT;
+      fullTrackSpecL.set(binsL, offset);
+      fullTrackSpecR.set(binsR, offset);
+    }
+
+    const pct = Math.round((x / cols) * 100);
+    updateLoading(35 + Math.round(pct * 0.60), `Analyzing Spectrum (${pct}%)...`);
+
+    if (x < cols) {
+      setTimeout(processChunk, 0);
+    } else {
+      updateLoading(100, "Analysis Complete!");
+      setTimeout(() => {
+        renderSpectrogramViewport();
+        if (onComplete) onComplete();
+      }, 50);
+    }
+  }
+
+  processChunk();
+}
+
+// 1D Catmull-Rom Cubic Hermite Spline Interpolator
+function cubicHermite(p0, p1, p2, p3, t) {
+  const a = -0.5 * p0 + 1.5 * p1 - 1.5 * p2 + 0.5 * p3;
+  const b = p0 - 2.5 * p1 + 2.0 * p2 - 0.5 * p3;
+  const c = -0.5 * p0 + 0.5 * p2;
+  const d = p1;
+  const val = a * t * t * t + b * t * t + c * t + d;
+  return val < 0 ? 0 : val;
+}
+
+// 2D BICUBIC CATMULL-ROM SURFACE INTERPOLATION ENGINE
+function renderSpectrogramViewport() {
+  if (!fullTrackSpecL || !specCols || !decodedAudioBuffer) return;
+
+  const cssW = getContainerWidth(specScrollArea);
+  const cssH = 300;
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  const renderW = Math.round(cssW * dpr);
+  const renderH = Math.round(cssH * dpr);
+
+  const totalTrackWidth = Math.max(cssW, Math.floor(cssW * spectroZoomFactor));
+  specSpacer.style.width = totalTrackWidth + 'px';
+
+  const scrollLeft = specScrollArea.scrollLeft;
+  const sampleRate = decodedAudioBuffer.sampleRate || 44100;
+  const binWidth = sampleRate / FFT_SIZE;
+
+  offscreenSpecL.width = renderW; offscreenSpecL.height = renderH;
+  offscreenSpecR.width = renderW; offscreenSpecR.height = renderH;
+
+  specLCanvas.width = renderW; specLCanvas.style.width = cssW + 'px'; specLCanvas.style.height = cssH + 'px';
+  specRCanvas.width = renderW; specRCanvas.style.width = cssW + 'px'; specRCanvas.style.height = cssH + 'px';
+
+  const ctxL = offscreenSpecL.getContext('2d');
+  const ctxR = offscreenSpecR.getContext('2d');
+
+  const imgL = ctxL.createImageData(renderW, renderH);
+  const imgR = ctxR.createImageData(renderW, renderH);
+  const dL = imgL.data;
+  const dR = imgR.data;
+
+  // Pre-calculate 4-Point Vertical Bin Indices for 2D Bicubic Filtering
+  const pyB_m1 = new Uint32Array(renderH);
+  const pyB_0  = new Uint32Array(renderH);
+  const pyB_1  = new Uint32Array(renderH);
+  const pyB_2  = new Uint32Array(renderH);
+  const pyB_fy = new Float32Array(renderH);
+
+  const minMel = hzToMel(currentMinHz);
+  const maxMel = hzToMel(currentMaxHz);
+  const melRange = maxMel - minMel;
+  const freqRange = currentMaxHz - currentMinHz;
+
+  for (let py = 0; py < renderH; py++) {
+    const pctY = (renderH > 1) ? (py / (renderH - 1)) : 0;
+    let freq;
+    if (useMelScale) {
+      const mel = maxMel - pctY * melRange;
+      freq = melToHz(mel);
+    } else {
+      freq = currentMaxHz - pctY * freqRange;
+    }
+
+    const exactBin = Math.max(0, Math.min(specHalfFFT - 1, freq / binWidth));
+    const b0 = Math.floor(exactBin);
+    const fy = exactBin - b0;
+
+    pyB_m1[py] = Math.max(0, b0 - 1);
+    pyB_0[py]  = b0;
+    pyB_1[py]  = Math.min(specHalfFFT - 1, b0 + 1);
+    pyB_2[py]  = Math.min(specHalfFFT - 1, b0 + 2);
+    pyB_fy[py] = fy;
+  }
+
+  const totalRenderTrackW = totalTrackWidth * dpr;
+  const colRatio = (specCols - 1) / totalRenderTrackW;
+  const scrollLeftPx = scrollLeft * dpr;
+
+  for (let vx = 0; vx < renderW; vx++) {
+    const trackX = scrollLeftPx + vx;
+    const exactCol = trackX * colRatio;
+
+    if (colRatio <= 1.0) {
+      // ZOOMED IN: 2D Bicubic Catmull-Rom Surface Filtering (16-Point Spatial Matrix)
+      const c0 = Math.floor(exactCol);
+      const fx = exactCol - c0;
+
+      const cm1 = Math.max(0, c0 - 1);
+      const c1  = Math.min(specCols - 1, c0 + 1);
+      const c2  = Math.min(specCols - 1, c0 + 2);
+
+      const off_m1 = cm1 * specHalfFFT;
+      const off_0  = c0  * specHalfFFT;
+      const off_1  = c1  * specHalfFFT;
+      const off_2  = c2  * specHalfFFT;
+
+      for (let py = 0; py < renderH; py++) {
+        const bm1 = pyB_m1[py];
+        const b0  = pyB_0[py];
+        const b1  = pyB_1[py];
+        const b2  = pyB_2[py];
+        const fy  = pyB_fy[py];
+
+        // Left Channel Bicubic Interpolation
+        const y_m1_L = cubicHermite(fullTrackSpecL[off_m1 + bm1], fullTrackSpecL[off_m1 + b0], fullTrackSpecL[off_m1 + b1], fullTrackSpecL[off_m1 + b2], fy);
+        const y_0_L  = cubicHermite(fullTrackSpecL[off_0  + bm1], fullTrackSpecL[off_0  + b0], fullTrackSpecL[off_0  + b1], fullTrackSpecL[off_0  + b2], fy);
+        const y_1_L  = cubicHermite(fullTrackSpecL[off_1  + bm1], fullTrackSpecL[off_1  + b0], fullTrackSpecL[off_1  + b1], fullTrackSpecL[off_1  + b2], fy);
+        const y_2_L  = cubicHermite(fullTrackSpecL[off_2  + bm1], fullTrackSpecL[off_2  + b0], fullTrackSpecL[off_2  + b1], fullTrackSpecL[off_2  + b2], fy);
+
+        const valL = cubicHermite(y_m1_L, y_0_L, y_1_L, y_2_L, fx) * spectroGainVal;
+
+        // Right Channel Bicubic Interpolation
+        const y_m1_R = cubicHermite(fullTrackSpecR[off_m1 + bm1], fullTrackSpecR[off_m1 + b0], fullTrackSpecR[off_m1 + b1], fullTrackSpecR[off_m1 + b2], fy);
+        const y_0_R  = cubicHermite(fullTrackSpecR[off_0  + bm1], fullTrackSpecR[off_0  + b0], fullTrackSpecR[off_0  + b1], fullTrackSpecR[off_0  + b2], fy);
+        const y_1_R  = cubicHermite(fullTrackSpecR[off_1  + bm1], fullTrackSpecR[off_1  + b0], fullTrackSpecR[off_1  + b1], fullTrackSpecR[off_1  + b2], fy);
+        const y_2_R  = cubicHermite(fullTrackSpecR[off_2  + bm1], fullTrackSpecR[off_2  + b0], fullTrackSpecR[off_2  + b1], fullTrackSpecR[off_2  + b2], fy);
+
+        const valR = cubicHermite(y_m1_R, y_0_R, y_1_R, y_2_R, fx) * spectroGainVal;
+
+        const off = (py * renderW + vx) * 4;
+        const lutIdxL = Math.round(Math.max(0, Math.min(1023, valL * 4.01)));
+        const lutIdxR = Math.round(Math.max(0, Math.min(1023, valR * 4.01)));
+
+        const cL = colLUT[lutIdxL];
+        const cR = colLUT[lutIdxR];
+
+        dL[off]     = cL[0]; dL[off + 1] = cL[1]; dL[off + 2] = cL[2]; dL[off + 3] = 255;
+        dR[off]     = cR[0]; dR[off + 1] = cR[1]; dR[off + 2] = cR[2]; dR[off + 3] = 255;
+      }
+    } else {
+      // ZOOMED OUT: Peak Max-Pooling Aggregation
+      const startC = Math.floor(exactCol);
+      const endC = Math.min(specCols - 1, Math.ceil((trackX + 1) * colRatio));
+
+      for (let py = 0; py < renderH; py++) {
+        const b0 = pyB_0[py];
+        const b1 = pyB_1[py];
+        const bf = pyB_fy[py];
+
+        let maxL = 0, maxR = 0;
+
+        for (let c = startC; c <= endC; c++) {
+          const offset = c * specHalfFFT;
+          const valL = fullTrackSpecL[offset + b0] + (fullTrackSpecL[offset + b1] - fullTrackSpecL[offset + b0]) * bf;
+          const valR = fullTrackSpecR[offset + b0] + (fullTrackSpecR[offset + b1] - fullTrackSpecR[offset + b0]) * bf;
+          if (valL > maxL) maxL = valL;
+          if (valR > maxR) maxR = valR;
+        }
+
+        const vL = maxL * spectroGainVal;
+        const vR = maxR * spectroGainVal;
+
+        const off = (py * renderW + vx) * 4;
+        const lutIdxL = Math.round(Math.max(0, Math.min(1023, vL * 4.01)));
+        const lutIdxR = Math.round(Math.max(0, Math.min(1023, vR * 4.01)));
+
+        const cL = colLUT[lutIdxL];
+        const cR = colLUT[lutIdxR];
+
+        dL[off]     = cL[0]; dL[off + 1] = cL[1]; dL[off + 2] = cL[2]; dL[off + 3] = 255;
+        dR[off]     = cR[0]; dR[off + 1] = cR[1]; dR[off + 2] = cR[2]; dR[off + 3] = 255;
+      }
+    }
+  }
+
+  ctxL.putImageData(imgL, 0, 0);
+  ctxR.putImageData(imgR, 0, 0);
+
+  specLCtx.drawImage(offscreenSpecL, 0, 0);
+  specRCtx.drawImage(offscreenSpecR, 0, 0);
+
+  updateOverlays();
+}
+
+specScrollArea.addEventListener('scroll', () => {
+  if (specCols) renderSpectrogramViewport();
+});
+
+function setSpectrogramBounds(minVal, maxVal, sourceInput) {
+  let min = Math.max(0, Math.min(19900, Math.round(Number(minVal) || 0)));
+  let max = Math.max(min + 100, Math.min(20000, Math.round(Number(maxVal) || 20000)));
+
+  currentMinHz = min;
+  currentMaxHz = max;
+
+  if (sourceInput !== 'numMin') numMinHz.value = currentMinHz;
+  if (sourceInput !== 'sliderMin') sliderMinHz.value = currentMinHz;
+  if (sourceInput !== 'numMax') numMaxHz.value = currentMaxHz;
+  if (sourceInput !== 'sliderMax') sliderMaxHz.value = currentMaxHz;
+
+  sliderMinHz.max = Math.max(0, currentMaxHz - 100);
+  numMinHz.max = Math.max(0, currentMaxHz - 100);
+  sliderMaxHz.min = Math.min(20000, currentMinHz + 100);
+  numMaxHz.min = Math.min(20000, currentMinHz + 100);
+
+  updatePresetButtonsState();
+  if (specCols) renderSpectrogramViewport();
+}
+
+function updatePresetButtonsState() {
+  const btn100_3k = document.getElementById('preset100_3k');
+  const btnFull = document.getElementById('presetFull');
+  if (currentMinHz === 100 && currentMaxHz === 3000) {
+    btn100_3k.classList.add('active');
+    btnFull.classList.remove('active');
+  } else if (currentMinHz === 20 && currentMaxHz === 20000) {
+    btnFull.classList.add('active');
+    btn100_3k.classList.remove('active');
+  } else {
+    btn100_3k.classList.remove('active');
+    btnFull.classList.remove('active');
+  }
+}
+
+numMinHz.addEventListener('change', () => setSpectrogramBounds(numMinHz.value, currentMaxHz, 'numMin'));
+sliderMinHz.addEventListener('input', () => setSpectrogramBounds(sliderMinHz.value, currentMaxHz, 'sliderMin'));
+numMaxHz.addEventListener('change', () => setSpectrogramBounds(currentMinHz, numMaxHz.value, 'numMax'));
+sliderMaxHz.addEventListener('input', () => setSpectrogramBounds(currentMinHz, sliderMaxHz.value, 'sliderMax'));
+
+spectroGain.addEventListener('input', (e) => {
+  spectroGainVal = parseFloat(e.target.value);
+  if (specCols) renderSpectrogramViewport();
+});
+
+btnScaleMel.addEventListener('click', () => {
+  useMelScale = true;
+  btnScaleMel.classList.add('active');
+  btnScaleLinear.classList.remove('active');
+  if (specCols) renderSpectrogramViewport();
+});
+
+btnScaleLinear.addEventListener('click', () => {
+  useMelScale = false;
+  btnScaleLinear.classList.add('active');
+  btnScaleMel.classList.remove('active');
+  if (specCols) renderSpectrogramViewport();
+});
+
+document.getElementById('preset100_3k').addEventListener('click', () => setSpectrogramBounds(100, 3000, 'preset'));
+document.getElementById('presetFull').addEventListener('click', () => setSpectrogramBounds(20, 20000, 'preset'));
+
+rtaMinInput.addEventListener('change', () => {
+  rtaMinFreq = Math.max(0, Math.min(parseInt(rtaMinInput.value) || 0, rtaMaxFreq - 50));
+  rtaMinInput.value = rtaMinFreq;
+  clearPresetActive();
+});
+rtaMaxInput.addEventListener('change', () => {
+  rtaMaxFreq = Math.min(20000, Math.max(parseInt(rtaMaxInput.value) || 100, rtaMinFreq + 50));
+  rtaMaxInput.value = rtaMaxFreq;
+  clearPresetActive();
+});
+
+function updateRTABounds(minVal, maxVal) {
+  rtaMinFreq = Math.max(0, Math.min(minVal, maxVal - 50));
+  rtaMaxFreq = Math.min(20000, Math.max(maxVal, rtaMinFreq + 50));
+  rtaMinInput.value = rtaMinFreq;
+  rtaMaxInput.value = rtaMaxFreq;
+  clearPresetActive();
+}
+
+function clearPresetActive() {
+  document.querySelectorAll('#rtaPresetFull, #rtaPresetBass, #rtaPresetMids, #rtaPresetHighs').forEach(b => b.classList.remove('active'));
+}
+
+document.getElementById('rtaPresetFull').addEventListener('click', () => { updateRTABounds(20, 20000); document.getElementById('rtaPresetFull').classList.add('active'); });
+document.getElementById('rtaPresetBass').addEventListener('click', () => { updateRTABounds(20, 500); document.getElementById('rtaPresetBass').classList.add('active'); });
+document.getElementById('rtaPresetMids').addEventListener('click', () => { updateRTABounds(500, 4000); document.getElementById('rtaPresetMids').classList.add('active'); });
+document.getElementById('rtaPresetHighs').addEventListener('click', () => { updateRTABounds(4000, 20000); document.getElementById('rtaPresetHighs').classList.add('active'); });
+
+[specLCanvas, specRCanvas].forEach((canvas, idx) => {
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    hoverSpectro.x = e.clientX - rect.left;
+    hoverSpectro.y = e.clientY - rect.top;
+    hoverSpectro.canvas = canvas;
+    hoverSpectro.isLeft = (idx === 0);
+    updateOverlays();
+  });
+  canvas.addEventListener('mouseleave', () => {
+    hoverSpectro.canvas = null;
+    updateOverlays();
+  });
+});
+
+specCanvas.addEventListener('mousemove', (e) => {
+  const rect = specCanvas.getBoundingClientRect();
+  hoverRTA.x = e.clientX - rect.left;
+  hoverRTA.y = e.clientY - rect.top;
+  hoverRTA.active = true;
+  if (!audioPlayer.paused) return;
+  drawSpectrumAnalyzer();
+});
+specCanvas.addEventListener('mouseleave', () => {
+  hoverRTA.active = false;
+  if (!audioPlayer.paused) return;
+  drawSpectrumAnalyzer();
+});
+
+// ACCURATE INDEPENDENT SEEKING HANDLERS
+function seekWaveform(clientX) {
+  if (!audioPlayer.duration) return;
+  const rect = waveCanvas.getBoundingClientRect();
+  const clickX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+  const scrollLeft = waveScrollArea.scrollLeft;
+  const totalTrackWidth = waveCanvas.width;
+  const globalX = scrollLeft + clickX;
+  const pct = Math.max(0, Math.min(1, globalX / totalTrackWidth));
+
+  audioPlayer.currentTime = pct * audioPlayer.duration;
+  updateOverlays();
+}
+
+function seekSpectrogram(clientX, targetCanvas) {
+  if (!audioPlayer.duration) return;
+  const rect = targetCanvas.getBoundingClientRect();
+  const clickX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+  const scrollLeft = specScrollArea.scrollLeft;
+  const cssW = getContainerWidth(specScrollArea);
+  const totalTrackWidth = Math.max(cssW, Math.floor(cssW * spectroZoomFactor));
+  const globalX = scrollLeft + clickX;
+  const pct = Math.max(0, Math.min(1, globalX / totalTrackWidth));
+
+  audioPlayer.currentTime = pct * audioPlayer.duration;
+  updateOverlays();
+}
+
+waveCanvas.addEventListener('mousedown', (e) => {
+  isSeekingWave = true;
+  seekWaveform(e.clientX);
+});
+
+[specLCanvas, specRCanvas].forEach(c => {
+  c.addEventListener('mousedown', (e) => {
+    isSeekingSpec = true;
+    seekSpectrogram(e.clientX, c);
+  });
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (isSeekingWave) seekWaveform(e.clientX);
+  if (isSeekingSpec) seekSpectrogram(e.clientX, specLCanvas);
+});
+
+window.addEventListener('mouseup', () => {
+  isSeekingWave = false;
+  isSeekingSpec = false;
+});
+
+function updateOverlays() {
+  if (!audioPlayer.duration) return;
+  const cur = audioPlayer.currentTime;
+  const dur = audioPlayer.duration;
+  const pct = cur / dur;
+
+  timeText.innerText = `${formatTime(cur)} / ${formatTime(dur)}`;
+
+  const cssW = getContainerWidth(specScrollArea);
+  const cssH = 300;
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  const totalTrackWidth = Math.max(cssW, Math.floor(cssW * spectroZoomFactor));
+  const scrollLeft = specScrollArea.scrollLeft;
+
+  const globalPlayX = pct * totalTrackWidth;
+  const viewPlayX = Math.round((globalPlayX - scrollLeft) * dpr);
+
+  specLCtx.drawImage(offscreenSpecL, 0, 0);
+  specRCtx.drawImage(offscreenSpecR, 0, 0);
+
+  const renderW = cssW * dpr;
+  const renderH = cssH * dpr;
+
+  if (viewPlayX >= 0 && viewPlayX <= renderW) {
+    const barW = Math.max(2, Math.round(2 * dpr));
+    specLCtx.fillStyle = '#00f3ff';
+    specLCtx.fillRect(viewPlayX - Math.floor(barW / 2), 0, barW, renderH);
+
+    specRCtx.fillStyle = '#00f3ff';
+    specRCtx.fillRect(viewPlayX - Math.floor(barW / 2), 0, barW, renderH);
+  }
+
+  if (hoverSpectro.canvas) {
+    const targetCtx = hoverSpectro.isLeft ? specLCtx : specRCtx;
+    const pctY = hoverSpectro.y / cssH;
+    let freqHz;
+    if (useMelScale) {
+      const minMel = hzToMel(currentMinHz);
+      const maxMel = hzToMel(currentMaxHz);
+      const mel = maxMel - pctY * (maxMel - minMel);
+      freqHz = Math.round(melToHz(mel));
+    } else {
+      freqHz = Math.round(currentMaxHz - pctY * (currentMaxHz - currentMinHz));
+    }
+
+    const hoverGlobalX = scrollLeft + hoverSpectro.x;
+    const hoverPctX = hoverGlobalX / totalTrackWidth;
+    const hoverSec = hoverPctX * dur;
+
+    const hX = hoverSpectro.x * dpr;
+    const hY = hoverSpectro.y * dpr;
+
+    targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    targetCtx.lineWidth = Math.max(1, dpr);
+    targetCtx.setLineDash([3 * dpr, 3 * dpr]);
+    targetCtx.beginPath();
+    targetCtx.moveTo(0, hY); targetCtx.lineTo(renderW, hY);
+    targetCtx.moveTo(hX, 0); targetCtx.lineTo(hX, renderH);
+    targetCtx.stroke();
+    targetCtx.setLineDash([]);
+
+    const text = `${freqHz.toLocaleString()} Hz  |  ${formatTime(hoverSec)}`;
+    const fontSize = Math.round(12 * dpr);
+    targetCtx.font = `bold ${fontSize}px sans-serif`;
+    const txtW = targetCtx.measureText(text).width;
+
+    let tipX = hX + 12 * dpr;
+    let tipY = hY - 12 * dpr;
+    const boxPad = 8 * dpr;
+    const boxH = 24 * dpr;
+
+    if (tipX + txtW + boxPad * 2 > renderW) tipX = hX - txtW - boxPad * 2 - 8 * dpr;
+    if (tipY - boxH < 0) tipY = hY + boxH + 8 * dpr;
+
+    targetCtx.fillStyle = 'rgba(15, 14, 28, 0.9)';
+    targetCtx.strokeStyle = '#9d72ff';
+    targetCtx.fillRect(tipX, tipY - 16 * dpr, txtW + boxPad * 2, boxH);
+    targetCtx.strokeRect(tipX, tipY - 16 * dpr, txtW + boxPad * 2, boxH);
+    targetCtx.fillStyle = '#00f3ff';
+    targetCtx.fillText(text, tipX + boxPad, tipY);
+  }
+
+  // Waveform Playhead Overlay
+  const waveW = waveCanvas.width;
+  waveCtx.clearRect(0, 0, waveW, waveCanvas.height);
+  waveCtx.drawImage(offscreenWaveCanvas, 0, 0);
+  const px = Math.round(pct * waveW);
+  waveCtx.fillStyle = '#00f3ff';
+  waveCtx.fillRect(px - 1, 0, 2, waveCanvas.height);
+}
+
+// 25 FPS DISPLAY LOOP
+function renderLoop(timestamp) {
+  if (audioPlayer.paused) return;
+
+  const delta = timestamp - lastRenderTime;
+
+  if (delta >= FRAME_INTERVAL) {
+    lastRenderTime = timestamp - (delta % FRAME_INTERVAL);
+
+    updateOverlays();
+    drawGoniometer();
+    drawSpectrumAnalyzer();
+  }
+
+  animFrameId = requestAnimationFrame(renderLoop);
+}
+
+function drawGoniometer() {
+  const w = gonioCanvas.width;
+  const h = gonioCanvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const scale = Math.min(w, h) * 0.32;
+
+  gonioCtx.fillStyle = '#040308';
+  gonioCtx.fillRect(0, 0, w, h);
+
+  gonioCtx.strokeStyle = '#181628';
+  gonioCtx.lineWidth = 1;
+  for (let r of [0.25, 0.5, 0.75, 1.0]) {
+    gonioCtx.beginPath();
+    gonioCtx.ellipse(cx, cy, scale * r * 0.5, scale * r * 0.88, 0, 0, 2 * Math.PI);
+    gonioCtx.stroke();
+  }
+
+  gonioCtx.beginPath();
+  gonioCtx.moveTo(cx, 0); gonioCtx.lineTo(cx, h);
+  gonioCtx.moveTo(0, cy); gonioCtx.lineTo(w, cy);
+  gonioCtx.moveTo(cx - scale, cy - scale); gonioCtx.lineTo(cx + scale, cy + scale);
+  gonioCtx.moveTo(cx + scale, cy - scale); gonioCtx.lineTo(cx - scale, cy + scale);
+  gonioCtx.stroke();
+
+  gonioCtx.fillStyle = '#666';
+  gonioCtx.font = '9px sans-serif';
+  gonioCtx.textAlign = 'center';
+  for (let a = 0; a < 360; a += 45) {
+    const rad = (a - 90) * Math.PI / 180;
+    const x1 = cx + Math.cos(rad) * scale * 0.5 * 1.12;
+    const y1 = cy + Math.sin(rad) * scale * 0.88 * 1.12;
+    gonioCtx.fillText(a, x1, y1 + 3);
+  }
+  gonioCtx.textAlign = 'start';
+
+  // L & R Labels Matched with Spectrum Analyzer Colors
+  gonioCtx.font = 'bold 12px sans-serif';
+  gonioCtx.fillStyle = '#00f3ff'; // Left Channel Cyan
+  gonioCtx.fillText('L', cx - scale - 15, cy - scale - 8);
+  gonioCtx.fillStyle = '#ff007f'; // Right Channel Magenta
+  gonioCtx.fillText('R', cx + scale + 5, cy - scale - 8);
+
+  gonioCtx.strokeStyle = '#22c55e';
+  gonioCtx.lineWidth = 2;
+  gonioCtx.setLineDash([4, 4]);
+  gonioCtx.beginPath();
+  gonioCtx.ellipse(cx, cy, scale * 0.5, scale * 0.88, 0, 0, 2 * Math.PI);
+  gonioCtx.stroke();
+  gonioCtx.setLineDash([]);
+
+  gonioCtx.fillStyle = '#22c55e';
+  gonioCtx.font = '8px sans-serif';
+  gonioCtx.fillText('In-Phase Zone', cx + scale * 0.5 + 5, cy - 4);
+
+  // Pick Scope Source: Raw Track View vs Post Mono ON Routing View
+  const activeGonioL = (gonioScopeMode === 'post' && postAnalyserL) ? postAnalyserL : analyserL;
+  const activeGonioR = (gonioScopeMode === 'post' && postAnalyserR) ? postAnalyserR : analyserR;
+
+  if (!activeGonioL || !activeGonioR) return;
+
+  const bufL = new Float32Array(activeGonioL.fftSize);
+  const bufR = new Float32Array(activeGonioR.fftSize);
+  activeGonioL.getFloatTimeDomainData(bufL);
+  activeGonioR.getFloatTimeDomainData(bufR);
+
+  let sumLR = 0, sumL2 = 0, sumR2 = 0;
+  const len = bufL.length;
+  gonioCtx.fillStyle = '#9d72ff';
+  for (let i = 0; i < len; i += 2) {
+    const l = bufL[i]; const r = bufR[i];
+    sumLR += l * r; sumL2 += l * l; sumR2 += r * r;
+    const x = cx + (r - l) * scale;
+    const y = cy - (l + r) * scale;
+    gonioCtx.fillRect(x - 1, y - 1, 2, 2);
+  }
+
+  const denom = Math.sqrt(sumL2 * sumR2);
+  const corr = denom === 0 ? 1 : Math.max(-1, Math.min(1, sumLR / denom));
+  const pct = (corr + 1) / 2;
+  phasePointer.style.left = `${Math.min(100, Math.max(0, pct * 100))}%`;
+
+  gonioCtx.fillStyle = 'rgba(15,14,28,0.9)';
+  gonioCtx.fillRect(cx - 52, h - 28, 104, 22);
+  gonioCtx.strokeStyle = '#9d72ff';
+  gonioCtx.lineWidth = 1;
+  gonioCtx.strokeRect(cx - 52, h - 28, 104, 22);
+  gonioCtx.fillStyle = corr >= 0 ? '#22c55e' : '#ef4444';
+  gonioCtx.font = 'bold 13px monospace';
+  gonioCtx.textAlign = 'center';
+  gonioCtx.fillText('Φ = ' + corr.toFixed(3), cx, h - 11);
+  gonioCtx.textAlign = 'start';
+}
+
+function drawSpectrumAnalyzer() {
+  const w = specCanvas.width;
+  const h = specCanvas.height;
+  specCtx.fillStyle = '#040308';
+  specCtx.fillRect(0, 0, w, h);
+
+  if (rtaMaxFreq <= rtaMinFreq) rtaMaxFreq = rtaMinFreq + 50;
+  const logMin = Math.log10(Math.max(1, rtaMinFreq));
+  const logMax = Math.log10(rtaMaxFreq);
+  const logRange = logMax - logMin;
+
+  specCtx.strokeStyle = '#181628';
+  specCtx.lineWidth = 1;
+  specCtx.fillStyle = '#666';
+  specCtx.font = '10px sans-serif';
+
+  const dbSteps = [0, -12, -24, -36, -48, -60, -72];
+  for (let db of dbSteps) {
+    const y = ((0 - db) / 72) * h;
+    specCtx.beginPath();
+    specCtx.moveTo(0, y); specCtx.lineTo(w, y);
+    specCtx.stroke();
+    const label = `${db} dB`;
+    specCtx.fillText(label, 8, y - 3);
+  }
+
+  const freqGrid = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 12000, 14000, 16000, 18000, 20000];
+  for (let f of freqGrid) {
+    if (f >= rtaMinFreq && f <= rtaMaxFreq) {
+      const x = ((Math.log10(f) - logMin) / logRange) * w;
+      specCtx.beginPath();
+      specCtx.moveTo(x, 0); specCtx.lineTo(x, h);
+      specCtx.stroke();
+      const label = f >= 1000 ? `${f / 1000}k` : `${f}`;
+      specCtx.fillText(label, Math.max(4, x + 3), h - 6);
+    }
+  }
+
+  if (!analyserL || !analyserR) return;
+
+  const freqL = new Uint8Array(analyserL.frequencyBinCount);
+  const freqR = new Uint8Array(analyserR.frequencyBinCount);
+  analyserL.getByteFrequencyData(freqL);
+  analyserR.getByteFrequencyData(freqR);
+  const sampleRate = audioCtx.sampleRate || 44100;
+  const binWidth = sampleRate / analyserL.fftSize;
+
+  const MAX_POINTS = 600;
+  const step = Math.max(1, Math.floor(w / MAX_POINTS));
+
+  function plotCurve(data, color) {
+    specCtx.beginPath();
+    specCtx.strokeStyle = color;
+    specCtx.lineWidth = 1.5;
+    let first = true;
+    for (let x = 0; x < w; x += step) {
+      const f = rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, x / w);
+      const binIdx = Math.min(data.length - 1, Math.round(f / binWidth));
+      const val = data[binIdx] || 0;
+      const y = h - (val / 255) * h;
+      if (first) { specCtx.moveTo(x, y); first = false; }
+      else specCtx.lineTo(x, y);
+    }
+    if (first) return;
+    const binIdxEnd = Math.min(data.length - 1, Math.round(rtaMaxFreq / binWidth));
+    const valEnd = data[binIdxEnd] || 0;
+    specCtx.lineTo(w, h - (valEnd / 255) * h);
+    specCtx.stroke();
+  }
+
+  // Channel Tracking Filter for Spectrum Analyzer
+  if (channelMode === 'stereo' || channelMode === 'left') {
+    plotCurve(freqL, '#00f3ff');
+  }
+  if (channelMode === 'stereo' || channelMode === 'right') {
+    plotCurve(freqR, '#ff007f');
+  }
+
+  if (hoverRTA.active) {
+    const fHover = rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, hoverRTA.x / w);
+    const dbHover = Math.round(-72 + (1 - hoverRTA.y / h) * 72);
+    specCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    specCtx.setLineDash([3, 3]);
+    specCtx.beginPath();
+    specCtx.moveTo(0, hoverRTA.y); specCtx.lineTo(w, hoverRTA.y);
+    specCtx.moveTo(hoverRTA.x, 0); specCtx.lineTo(hoverRTA.x, h);
+    specCtx.stroke();
+    specCtx.setLineDash([]);
+    const text = `${Math.round(fHover).toLocaleString()} Hz  |  ${dbHover} dB`;
+    specCtx.font = 'bold 12px sans-serif';
+    const txtW = specCtx.measureText(text).width;
+    let tipX = hoverRTA.x + 10;
+    let tipY = hoverRTA.y - 10;
+    if (tipX + txtW + 16 > w) tipX = hoverRTA.x - txtW - 20;
+    specCtx.fillStyle = 'rgba(15, 14, 28, 0.9)';
+    specCtx.strokeStyle = '#9d72ff';
+    specCtx.fillRect(tipX, tipY - 16, txtW + 16, 24);
+    specCtx.strokeRect(tipX, tipY - 16, txtW + 16, 24);
+    specCtx.fillStyle = '#66fcf1';
+    specCtx.fillText(text, tipX + 8, tipY);
+  }
+}
+
+function formatTime(sec) {
+  if (!sec || !isFinite(sec)) return '00:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
+
+window.addEventListener('resize', () => {
+  if (decodedAudioBuffer) {
+    waveBaseWidth = getContainerWidth(waveScrollArea);
+    renderDarwinWaveformToOffscreen();
+    updateRTACanvasWidth();
+    renderSpectrogramViewport();
+  }
+});
+</script>
+</body>
+</html>
