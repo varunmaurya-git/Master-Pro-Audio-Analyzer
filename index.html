@@ -88,6 +88,17 @@ body {
   letter-spacing: 0.5px;
 }
 
+.privacy-badge {
+  background: rgba(0, 243, 255, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
 .linkedin-link {
   color: var(--accent-cyan);
   text-decoration: none;
@@ -461,13 +472,15 @@ audio { display: none; }
   </div>
 </div>
 
-<!-- Header Branding with Author Credits -->
+<!-- Header Branding with Author Credits & Privacy Badge -->
 <div class="header-branding">
   <div class="header-title">Master Pro Audio Analyzer Suite</div>
   <div class="header-credits">
     <span>Created by <span class="author-name">VARUN MAURYA</span></span>
     <span>&bull;</span>
     <span class="free-badge">FREE FOR EVERYONE</span>
+    <span>&bull;</span>
+    <span class="privacy-badge">🔒 100% LOCAL & PRIVATE</span>
     <span>&bull;</span>
     <a href="https://www.linkedin.com/in/maurya-varun" target="_blank" rel="noopener noreferrer" class="linkedin-link">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
@@ -484,7 +497,7 @@ audio { display: none; }
   <button id="btnLeftOnly">Left Only</button>
   <button id="btnRightOnly">Right Only</button>
   <button id="btnMono">Mono: OFF</button>
-  <span id="fileNameDisplay" style="font-size:0.85rem; color:#888;">Select or drop an audio file to begin analysis (Spacebar = Play/Pause).</span>
+  <span id="fileNameDisplay" style="font-size:0.85rem; color:#888;">Select or drop an audio file to begin analysis (100% Private — Processed locally on your device).</span>
 </div>
 
 <div class="waveform-section">
@@ -574,6 +587,10 @@ audio { display: none; }
 <div class="explainer-card">
   <div class="explainer-title">Quick Reference & Module Functions Guide</div>
   <div class="explainer-grid">
+    <div class="explainer-box" style="border-color: rgba(34, 197, 94, 0.4);">
+      <h4 style="color: var(--accent-green);">🔒 100% Client-Side Privacy</h4>
+      <p>Your audio files are <strong>never uploaded to any cloud server</strong>. All audio decoding, Web Worker FFT signal processing, and rendering happen locally inside your browser. Unreleased tracks stay 100% secure on your computer.</p>
+    </div>
     <div class="explainer-box">
       <h4>1. Control Bar & Routing</h4>
       <p>Load audio via file selection or full-page drag & drop. Toggle playback with <strong>Spacebar</strong>. Select <strong>Left Only</strong> or <strong>Right Only</strong> to isolate channels, or turn <strong>Mono: ON</strong> to audition mono-compatibility.</p>
