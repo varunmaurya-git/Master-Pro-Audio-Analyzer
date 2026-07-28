@@ -937,7 +937,7 @@ function initWebAudio() {
   gainL.connect(stereoMerger, 0, 0);
   gainR.connect(stereoMerger, 0, 1);
 
-  // Dedicated Mono Path (Natively forced to 1-channel downmix by W3C spec - Cross-Browser Solution)
+  // Dedicated Mono Path (Natively forced to 1-channel downmix by W3C spec)
   monoGain = audioCtx.createGain();
   monoGain.channelCount = 1;
   monoGain.channelCountMode = "explicit";
@@ -945,12 +945,16 @@ function initWebAudio() {
 
   mediaSource.connect(monoGain);
 
-  // Main Output Bus
+  // Main Output Bus (FORCED TO EXPLICIT 2 CHANNELS SO MONO UPMIXES TO DUAL EQUAL CHANNELS FOR SCOPE)
   mainOutputGain = audioCtx.createGain();
+  mainOutputGain.channelCount = 2;
+  mainOutputGain.channelCountMode = "explicit";
+  mainOutputGain.channelInterpretation = "speakers";
+
   stereoMerger.connect(mainOutputGain);
   monoGain.connect(mainOutputGain);
 
-  // Post-Routing Splitter & Analysers for Goniometer Post-Routing Scope Mode
+  // Post-Routing Splitter & Analysers for Goniometer Post-Routing Scope View
   postSplitter = audioCtx.createChannelSplitter(2);
   postAnalyserL = audioCtx.createAnalyser();
   postAnalyserR = audioCtx.createAnalyser();
@@ -1787,246 +1791,3 @@ function updateOverlays() {
     targetCtx.strokeRect(tipX, tipY - 16 * dpr, txtW + boxPad * 2, boxH);
     targetCtx.fillStyle = '#00f3ff';
     targetCtx.fillText(text, tipX + boxPad, tipY);
-  }
-
-  // Waveform Playhead Overlay
-  const waveW = waveCanvas.width;
-  waveCtx.clearRect(0, 0, waveW, waveCanvas.height);
-  waveCtx.drawImage(offscreenWaveCanvas, 0, 0);
-  const px = Math.round(pct * waveW);
-  waveCtx.fillStyle = '#00f3ff';
-  waveCtx.fillRect(px - 1, 0, 2, waveCanvas.height);
-}
-
-// 25 FPS DISPLAY LOOP
-function renderLoop(timestamp) {
-  if (audioPlayer.paused) return;
-
-  const delta = timestamp - lastRenderTime;
-
-  if (delta >= FRAME_INTERVAL) {
-    lastRenderTime = timestamp - (delta % FRAME_INTERVAL);
-
-    updateOverlays();
-    drawGoniometer();
-    drawSpectrumAnalyzer();
-  }
-
-  animFrameId = requestAnimationFrame(renderLoop);
-}
-
-function drawGoniometer() {
-  const w = gonioCanvas.width;
-  const h = gonioCanvas.height;
-  const cx = w / 2;
-  const cy = h / 2;
-  const scale = Math.min(w, h) * 0.32;
-
-  gonioCtx.fillStyle = '#040308';
-  gonioCtx.fillRect(0, 0, w, h);
-
-  gonioCtx.strokeStyle = '#181628';
-  gonioCtx.lineWidth = 1;
-  for (let r of [0.25, 0.5, 0.75, 1.0]) {
-    gonioCtx.beginPath();
-    gonioCtx.ellipse(cx, cy, scale * r * 0.5, scale * r * 0.88, 0, 0, 2 * Math.PI);
-    gonioCtx.stroke();
-  }
-
-  gonioCtx.beginPath();
-  gonioCtx.moveTo(cx, 0); gonioCtx.lineTo(cx, h);
-  gonioCtx.moveTo(0, cy); gonioCtx.lineTo(w, cy);
-  gonioCtx.moveTo(cx - scale, cy - scale); gonioCtx.lineTo(cx + scale, cy + scale);
-  gonioCtx.moveTo(cx + scale, cy - scale); gonioCtx.lineTo(cx - scale, cy + scale);
-  gonioCtx.stroke();
-
-  gonioCtx.fillStyle = '#666';
-  gonioCtx.font = '9px sans-serif';
-  gonioCtx.textAlign = 'center';
-  for (let a = 0; a < 360; a += 45) {
-    const rad = (a - 90) * Math.PI / 180;
-    const x1 = cx + Math.cos(rad) * scale * 0.5 * 1.12;
-    const y1 = cy + Math.sin(rad) * scale * 0.88 * 1.12;
-    gonioCtx.fillText(a, x1, y1 + 3);
-  }
-  gonioCtx.textAlign = 'start';
-
-  // L & R Labels Matched with Spectrum Analyzer Colors
-  gonioCtx.font = 'bold 12px sans-serif';
-  gonioCtx.fillStyle = '#00f3ff'; // Left Channel Cyan
-  gonioCtx.fillText('L', cx - scale - 15, cy - scale - 8);
-  gonioCtx.fillStyle = '#ff007f'; // Right Channel Magenta
-  gonioCtx.fillText('R', cx + scale + 5, cy - scale - 8);
-
-  gonioCtx.strokeStyle = '#22c55e';
-  gonioCtx.lineWidth = 2;
-  gonioCtx.setLineDash([4, 4]);
-  gonioCtx.beginPath();
-  gonioCtx.ellipse(cx, cy, scale * 0.5, scale * 0.88, 0, 0, 2 * Math.PI);
-  gonioCtx.stroke();
-  gonioCtx.setLineDash([]);
-
-  gonioCtx.fillStyle = '#22c55e';
-  gonioCtx.font = '8px sans-serif';
-  gonioCtx.fillText('In-Phase Zone', cx + scale * 0.5 + 5, cy - 4);
-
-  // Pick Scope Source: Raw Track View vs Post Mono ON Routing View
-  const activeGonioL = (gonioScopeMode === 'post' && postAnalyserL) ? postAnalyserL : analyserL;
-  const activeGonioR = (gonioScopeMode === 'post' && postAnalyserR) ? postAnalyserR : analyserR;
-
-  if (!activeGonioL || !activeGonioR) return;
-
-  const bufL = new Float32Array(activeGonioL.fftSize);
-  const bufR = new Float32Array(activeGonioR.fftSize);
-  activeGonioL.getFloatTimeDomainData(bufL);
-  activeGonioR.getFloatTimeDomainData(bufR);
-
-  let sumLR = 0, sumL2 = 0, sumR2 = 0;
-  const len = bufL.length;
-  gonioCtx.fillStyle = '#9d72ff';
-  for (let i = 0; i < len; i += 2) {
-    const l = bufL[i]; const r = bufR[i];
-    sumLR += l * r; sumL2 += l * l; sumR2 += r * r;
-    const x = cx + (r - l) * scale;
-    const y = cy - (l + r) * scale;
-    gonioCtx.fillRect(x - 1, y - 1, 2, 2);
-  }
-
-  const denom = Math.sqrt(sumL2 * sumR2);
-  const corr = denom === 0 ? 1 : Math.max(-1, Math.min(1, sumLR / denom));
-  const pct = (corr + 1) / 2;
-  phasePointer.style.left = `${Math.min(100, Math.max(0, pct * 100))}%`;
-
-  gonioCtx.fillStyle = 'rgba(15,14,28,0.9)';
-  gonioCtx.fillRect(cx - 52, h - 28, 104, 22);
-  gonioCtx.strokeStyle = '#9d72ff';
-  gonioCtx.lineWidth = 1;
-  gonioCtx.strokeRect(cx - 52, h - 28, 104, 22);
-  gonioCtx.fillStyle = corr >= 0 ? '#22c55e' : '#ef4444';
-  gonioCtx.font = 'bold 13px monospace';
-  gonioCtx.textAlign = 'center';
-  gonioCtx.fillText('Φ = ' + corr.toFixed(3), cx, h - 11);
-  gonioCtx.textAlign = 'start';
-}
-
-function drawSpectrumAnalyzer() {
-  const w = specCanvas.width;
-  const h = specCanvas.height;
-  specCtx.fillStyle = '#040308';
-  specCtx.fillRect(0, 0, w, h);
-
-  if (rtaMaxFreq <= rtaMinFreq) rtaMaxFreq = rtaMinFreq + 50;
-  const logMin = Math.log10(Math.max(1, rtaMinFreq));
-  const logMax = Math.log10(rtaMaxFreq);
-  const logRange = logMax - logMin;
-
-  specCtx.strokeStyle = '#181628';
-  specCtx.lineWidth = 1;
-  specCtx.fillStyle = '#666';
-  specCtx.font = '10px sans-serif';
-
-  const dbSteps = [0, -12, -24, -36, -48, -60, -72];
-  for (let db of dbSteps) {
-    const y = ((0 - db) / 72) * h;
-    specCtx.beginPath();
-    specCtx.moveTo(0, y); specCtx.lineTo(w, y);
-    specCtx.stroke();
-    const label = `${db} dB`;
-    specCtx.fillText(label, 8, y - 3);
-  }
-
-  const freqGrid = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 12000, 14000, 16000, 18000, 20000];
-  for (let f of freqGrid) {
-    if (f >= rtaMinFreq && f <= rtaMaxFreq) {
-      const x = ((Math.log10(f) - logMin) / logRange) * w;
-      specCtx.beginPath();
-      specCtx.moveTo(x, 0); specCtx.lineTo(x, h);
-      specCtx.stroke();
-      const label = f >= 1000 ? `${f / 1000}k` : `${f}`;
-      specCtx.fillText(label, Math.max(4, x + 3), h - 6);
-    }
-  }
-
-  if (!analyserL || !analyserR) return;
-
-  const freqL = new Uint8Array(analyserL.frequencyBinCount);
-  const freqR = new Uint8Array(analyserR.frequencyBinCount);
-  analyserL.getByteFrequencyData(freqL);
-  analyserR.getByteFrequencyData(freqR);
-  const sampleRate = audioCtx.sampleRate || 44100;
-  const binWidth = sampleRate / analyserL.fftSize;
-
-  const MAX_POINTS = 600;
-  const step = Math.max(1, Math.floor(w / MAX_POINTS));
-
-  function plotCurve(data, color) {
-    specCtx.beginPath();
-    specCtx.strokeStyle = color;
-    specCtx.lineWidth = 1.5;
-    let first = true;
-    for (let x = 0; x < w; x += step) {
-      const f = rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, x / w);
-      const binIdx = Math.min(data.length - 1, Math.round(f / binWidth));
-      const val = data[binIdx] || 0;
-      const y = h - (val / 255) * h;
-      if (first) { specCtx.moveTo(x, y); first = false; }
-      else specCtx.lineTo(x, y);
-    }
-    if (first) return;
-    const binIdxEnd = Math.min(data.length - 1, Math.round(rtaMaxFreq / binWidth));
-    const valEnd = data[binIdxEnd] || 0;
-    specCtx.lineTo(w, h - (valEnd / 255) * h);
-    specCtx.stroke();
-  }
-
-  // Channel Tracking Filter for Spectrum Analyzer
-  if (channelMode === 'stereo' || channelMode === 'left') {
-    plotCurve(freqL, '#00f3ff');
-  }
-  if (channelMode === 'stereo' || channelMode === 'right') {
-    plotCurve(freqR, '#ff007f');
-  }
-
-  if (hoverRTA.active) {
-    const fHover = rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, hoverRTA.x / w);
-    const dbHover = Math.round(-72 + (1 - hoverRTA.y / h) * 72);
-    specCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-    specCtx.setLineDash([3, 3]);
-    specCtx.beginPath();
-    specCtx.moveTo(0, hoverRTA.y); specCtx.lineTo(w, hoverRTA.y);
-    specCtx.moveTo(hoverRTA.x, 0); specCtx.lineTo(hoverRTA.x, h);
-    specCtx.stroke();
-    specCtx.setLineDash([]);
-    const text = `${Math.round(fHover).toLocaleString()} Hz  |  ${dbHover} dB`;
-    specCtx.font = 'bold 12px sans-serif';
-    const txtW = specCtx.measureText(text).width;
-    let tipX = hoverRTA.x + 10;
-    let tipY = hoverRTA.y - 10;
-    if (tipX + txtW + 16 > w) tipX = hoverRTA.x - txtW - 20;
-    specCtx.fillStyle = 'rgba(15, 14, 28, 0.9)';
-    specCtx.strokeStyle = '#9d72ff';
-    specCtx.fillRect(tipX, tipY - 16, txtW + 16, 24);
-    specCtx.strokeRect(tipX, tipY - 16, txtW + 16, 24);
-    specCtx.fillStyle = '#66fcf1';
-    specCtx.fillText(text, tipX + 8, tipY);
-  }
-}
-
-function formatTime(sec) {
-  if (!sec || !isFinite(sec)) return '00:00';
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
-
-window.addEventListener('resize', () => {
-  if (decodedAudioBuffer) {
-    waveBaseWidth = getContainerWidth(waveScrollArea);
-    renderDarwinWaveformToOffscreen();
-    updateRTACanvasWidth();
-    renderSpectrogramViewport();
-  }
-});
-</script>
-</body>
-</html>
