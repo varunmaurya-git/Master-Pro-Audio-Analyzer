@@ -64,7 +64,7 @@ All audio decoding, Web Worker Fast Fourier Transform (FFT) signal processing, a
 ## ⚙️ Technical Architecture & DSP Highlights
 
 * **Zero External Dependencies:** Built completely without third-party frameworks, chart libraries, or UI kits.
-* **Multi-Threaded FFT Processing:** Heavy custom build zero-allocation Radix-2 Cooley-Tukey Fast Fourier Transform (FFT) implementation which run off the main thread inside **Web Workers**, keeping the UI responsive at steady high frame rates.
+* **Multi-Threaded FFT Processing:** Heavy custom build zero-allocation 8192-Point Radix-2 Cooley-Tukey Fast Fourier Transform (FFT) implementation which run off the main thread inside **Web Workers**, keeping the UI responsive at steady high frame rates.
 * **Zero-Allocation Memory Management:** Re-uses array buffers across animation frames to eliminate Garbage Collection (GC) latency spikes.
 * **Full-Page Drag & Drop:** Native HTML5 Drag and Drop event handling for instantaneous file loading.
 
