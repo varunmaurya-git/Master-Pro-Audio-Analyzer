@@ -128,7 +128,7 @@ body {
   border: 1px solid #232238;
 }
 
-input[type="file"], button, input[type="number"], input[type="range"] {
+input[type="file"], button, input[type="number"], input[type="range"], select {
   background: #1c1a30;
   color: var(--text-bright);
   border: 1px solid #3d3a61;
@@ -276,11 +276,29 @@ button.channel-active {
   flex-wrap: wrap;
 }
 
+.rta-meter-flex {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  background: #040308;
+  border-radius: 6px;
+  border: 1px solid #1c1a2e;
+  overflow: hidden;
+}
+
 #spectrumCanvas {
   display: block;
   height: 320px;
   background: #040308;
   cursor: crosshair;
+}
+
+#levelMeterCanvas {
+  display: block;
+  height: 320px;
+  background: #020106;
+  border-left: 1px solid #1c1a2e;
 }
 
 .spectro-controls {
@@ -364,12 +382,11 @@ button.channel-active {
 
 audio { display: none; }
 
-/* Status Overlay */
 .loading-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(7, 6, 17, 0.88);
-  backdrop-filter: blur(8px);
+  background: rgba(5, 4, 12, 0.92);
+  backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -383,28 +400,32 @@ audio { display: none; }
   pointer-events: auto;
 }
 .loading-box {
-  background: var(--panel-bg);
-  border: 1px solid #3d3a61;
-  border-radius: 12px;
-  padding: 25px 30px;
-  width: 400px;
+  background: #141329;
+  border: 1.5px solid #4a4675;
+  border-radius: 14px;
+  padding: 32px 38px;
+  width: 720px;
+  max-width: 94vw;
+  max-height: 92vh;
+  overflow-y: auto;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.9);
 }
 .loading-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 12px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin-bottom: 14px;
   color: var(--accent-cyan);
+  letter-spacing: 0.5px;
 }
 .progress-bar-container {
   width: 100%;
-  height: 10px;
-  background: #040308;
-  border-radius: 5px;
+  height: 12px;
+  background: #060512;
+  border-radius: 6px;
   overflow: hidden;
-  margin: 15px 0 10px 0;
-  border: 1px solid #232238;
+  margin: 18px 0 12px 0;
+  border: 1px solid #3d3a61;
 }
 .progress-bar-fill {
   width: 0%;
@@ -413,11 +434,56 @@ audio { display: none; }
   transition: width 0.08s ease-out;
 }
 .loading-status {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  font-size: 1.02rem;
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-/* Full Page Drag & Drop Overlay */
+.loading-info-card {
+  margin-top: 22px;
+  background: #080718;
+  border: 1px solid #322f54;
+  border-radius: 10px;
+  padding: 20px 22px;
+  text-align: left;
+}
+.loading-subhead {
+  font-size: 0.82rem;
+  color: var(--accent-purple);
+  margin-bottom: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.loading-info-heading {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+.loading-info-text {
+  font-size: 0.93rem;
+  color: #d1d0e6;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+.loading-info-bullets {
+  font-size: 0.90rem;
+  color: #f0f0ff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid #282545;
+  padding-top: 12px;
+  line-height: 1.5;
+}
+.loading-info-bullets strong {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
 .drop-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -469,10 +535,25 @@ audio { display: none; }
       <div id="progressBar" class="progress-bar-fill"></div>
     </div>
     <div id="loadingStatus" class="loading-status">Decoding audio buffer...</div>
+
+    <!-- Finalized Value & Privacy Notice -->
+    <div class="loading-info-card">
+      <div class="loading-subhead">(Quick read while your file is analyzing)</div>
+      <div class="loading-info-heading">⚡ Professional-Grade Audio Analyzer: 100% Free, Private & Instant</div>
+      <p class="loading-info-text">
+        Built to give you the lightning-fast speed, accuracy, and depth of costly paid Audio Analyzers right inside your web browser completely for free! Designed from the ground up for high-precision metering, this tool lets you X-ray your audio files to understand them better with total privacy.
+      </p>
+      <div class="loading-info-bullets">
+        <div>🔒 <strong>100% Local Privacy:</strong> No cloud uploads. Unreleased music or confidential audio files stay completely secure and never leave your device.</div>
+        <div>⚡ <strong>Hardware-Accelerated DSP:</strong> Computations execute directly on your machine’s CPU, eliminating upload delays and cloud server lag.</div>
+        <div>🎛️ <strong>Full Pro Metering:</strong> Includes a High-Resolution 8192-FFT Spectrogram, Goniometer Lissajous Phase Scope, Logarithmic RTA Spectrum Analyzer, and Peak Stereo Level Meter. Gives ability to access professional audio industry Mono On trick to listen file in mono but see it on scope in raw track view and post mono on view.</div>
+        <div>🚀 <strong>Zero Friction:</strong> Instant access in any web browser with no software downloads, plugins, or sign-ups required.</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Header Branding with Author Credits & Privacy Badge -->
+<!-- Header Branding -->
 <div class="header-branding">
   <div class="header-title">Master Pro Audio Analyzer Suite</div>
   <div class="header-credits">
@@ -497,7 +578,7 @@ audio { display: none; }
   <button id="btnLeftOnly">Left Only</button>
   <button id="btnRightOnly">Right Only</button>
   <button id="btnMono">Mono: OFF</button>
-  <span id="fileNameDisplay" style="font-size:0.85rem; color:#888;">Select or drop an audio file to begin analysis (100% Private — Processed locally on your device).</span>
+  <span id="fileNameDisplay" style="font-size:0.85rem; color:#888;">Select or drop an audio file to begin analysis (100% Private - Processed locally on your device).</span>
 </div>
 
 <div class="waveform-section">
@@ -534,26 +615,36 @@ audio { display: none; }
   </div>
 
   <div class="card">
-    <div class="card-title">Logarithmic Spectrum Analyzer (RTA)</div>
+    <div class="card-title">Logarithmic Spectrum Analyzer (RTA) & PEAK dBFS Meter</div>
     <div class="rta-controls">
       <label>Min Hz:</label>
       <input type="number" id="rtaMinInput" value="20" min="0" max="20000">
       <label>Max Hz:</label>
       <input type="number" id="rtaMaxInput" value="20000" min="0" max="20000">
-      <span style="color:#444; margin:0 5px;">| Presets:</span>
+      <label style="margin-left:6px; color:var(--accent-purple);">RTA Boost:</label>
+      <select id="selectRtaBoost" style="font-size:0.8rem; padding:2px 6px;">
+        <option value="0">0 dB (Raw FFT)</option>
+        <option value="6">+6 dB</option>
+        <option value="12" selected>+12 dB (Pro RTA Default)</option>
+        <option value="18">+18 dB</option>
+      </select>
+      <span style="color:#444; margin:0 4px;">|</span>
       <button id="rtaPresetFull" class="active">Full Range</button>
       <button id="rtaPresetBass">Bass</button>
       <button id="rtaPresetMids">Mids</button>
       <button id="rtaPresetHighs">Highs</button>
     </div>
     <div class="scroll-container" id="rtaScrollArea">
-      <canvas id="spectrumCanvas" height="320"></canvas>
+      <div class="rta-meter-flex">
+        <canvas id="spectrumCanvas" height="320"></canvas>
+        <canvas id="levelMeterCanvas" width="95" height="320"></canvas>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="card" style="width:100%; max-width:1350px;">
-  <div class="card-title">Interactive Spectrogram</div>
+  <div class="card-title">Interactive Spectrogram (Ultra-HD 8192-FFT Blackman-Harris Engine)</div>
   <div class="spectro-controls">
     <label>Min Hz:</label>
     <input type="number" id="numMinHz" value="20" min="0" max="19900">
@@ -563,12 +654,12 @@ audio { display: none; }
     <input type="range" id="sliderMaxHz" min="100" max="20000" step="50" value="20000" style="width:100px;">
     <label style="margin-left:8px; color:var(--accent-cyan);">Zoom (1x - 64x):</label>
     <input type="range" id="spectroTimeZoom" min="1" max="64" step="0.5" value="1" style="width:110px;">
-    <label style="margin-left:8px; color:#ffb703;">Gain:</label>
-    <input type="range" id="spectroGain" min="0.5" max="3.5" step="0.1" value="1.2" style="width:80px;">
+    <label style="margin-left:8px; color:#ffb703;">Bright:</label>
+    <input type="range" id="spectroGain" min="0.5" max="3.5" step="0.1" value="1.0" style="width:80px;">
     <span style="color:#444; margin:0 2px;">| Scale:</span>
     <button id="btnScaleMel" class="active">Mel Scale</button>
     <button id="btnScaleLinear">Linear</button>
-    <span style="color:#444; margin:0 2px;">| Presets:</span>
+    <span style="color:#444; margin:0 4px;">|</span>
     <button id="presetFull" class="active">Full Range</button>
     <button id="preset100_3k">100Hz - 3kHz</button>
   </div>
@@ -604,18 +695,18 @@ audio { display: none; }
       <p>Shows 2D stereo soundfield distribution and phase correlation meter. Switch between <strong>Scope: Raw Track View</strong> (unfiltered stereo audio file) and <strong>Scope: Post Mono ON Routing View</strong> (monitored signal that collapses visually into a straight vertical line in mono mode).</p>
     </div>
     <div class="explainer-box">
-      <h4>4. Spectrum Analyzer (RTA)</h4>
-      <p>Real-time frequency response curves for <strong>Left</strong> (Cyan) and <strong>Right</strong> (Magenta) channels. Automatically tracks isolated single channels when Left/Right Only is selected. Features logarithmic Hz bounds & frequency presets.</p>
+      <h4>4. Spectrum Analyzer (RTA) & Level Meter</h4>
+      <p>Real-time Float32 frequency response curves and Stereo Peak Level meter (0 dBFS to -90 dBFS). Features a single common middle linear dB scale, named PEAK dBFS header, customizable RTA display boost (+0 dB to +18 dB), peak-hold indicators, and numerical dB readouts.</p>
     </div>
     <div class="explainer-box">
       <h4>5. Interactive Spectrogram</h4>
-      <p>High-resolution 4096-FFT dual-channel spectral visualizer. Features Mel & Linear frequency scaling, 64x horizontal zoom, variable gain boost, and crosshair frequency/timestamp reading.</p>
+      <p>Ultra-HD 8192-FFT dual-channel spectral visualizer with Blackman-Harris windowing (-92 dB sidelobe attenuation) and Bilinear Anti-Aliased Rendering. Features Mel & Linear frequency scaling, 64x zoom, variable gain boost, and crosshair frequency/gain-dBFS/timestamp reading.</p>
     </div>
   </div>
 </div>
 
 <script>
-// ZERO-ALLOCATION RADIX-2 FAST FFT CLASS
+// FAST FFT CLASS (8192 FFT FOR ULTRA-HD FREQUENCY PRECISION)
 class FastFFT {
   constructor(size) {
     this.size = size;
@@ -673,80 +764,18 @@ class FastFFT {
     }
 
     const half = this.halfSize;
+    const normFactor = 2.0 / n;
     for (let k = 0; k < half; k++) {
       const r = real[k];
       const m = imag[k];
-      magnitudeOut[k] = Math.min(255, Math.sqrt(r * r + m * m) * 4.0);
+      const mag = Math.sqrt(r * r + m * m) * normFactor;
+      // Convert to Normalized Uint8 (0 = -100 dBFS, 255 = 0 dBFS)
+      const db = 20 * Math.log10(Math.max(1e-5, mag));
+      const norm = Math.max(0, Math.min(1, (db + 100) / 100));
+      magnitudeOut[k] = Math.round(norm * 255);
     }
   }
 }
-
-// Worker Blob String
-const workerCode = `
-${FastFFT.toString()}
-
-self.onmessage = function(e) {
-  const { dataL, dataR, FFT_SIZE, HOP_SIZE } = e.data;
-  const totalSamples = dataL.length;
-  const HALF_FFT = FFT_SIZE >>> 1;
-
-  if (totalSamples < FFT_SIZE) {
-    self.postMessage({ type: 'done', fullTrackSpecL: new Float32Array(0), fullTrackSpecR: new Float32Array(0), cols: 0, halfFFT: HALF_FFT });
-    return;
-  }
-
-  const cols = Math.floor((totalSamples - FFT_SIZE) / HOP_SIZE);
-  const fastFFT = new FastFFT(FFT_SIZE);
-
-  const hannWindow = new Float32Array(FFT_SIZE);
-  for (let n = 0; n < FFT_SIZE; n++) {
-    hannWindow[n] = 0.5 * (1 - Math.cos(2 * Math.PI * n / (FFT_SIZE - 1)));
-  }
-
-  const colDataL = new Float32Array(FFT_SIZE);
-  const colDataR = new Float32Array(FFT_SIZE);
-
-  const fullTrackSpecL = new Float32Array(cols * HALF_FFT);
-  const fullTrackSpecR = new Float32Array(cols * HALF_FFT);
-
-  const binsL = new Float32Array(HALF_FFT);
-  const binsR = new Float32Array(HALF_FFT);
-
-  const reportChunk = Math.max(1, Math.floor(cols / 40));
-
-  for (let x = 0; x < cols; x++) {
-    const startIdx = x * HOP_SIZE;
-    for (let n = 0; n < FFT_SIZE; n++) {
-      colDataL[n] = dataL[startIdx + n] || 0;
-      colDataR[n] = dataR[startIdx + n] || 0;
-    }
-
-    fastFFT.transform(colDataL, hannWindow, binsL);
-    fastFFT.transform(colDataR, hannWindow, binsR);
-
-    const offset = x * HALF_FFT;
-    fullTrackSpecL.set(binsL, offset);
-    fullTrackSpecR.set(binsR, offset);
-
-    if (x % reportChunk === 0 || x === cols - 1) {
-      const pct = Math.round((x / cols) * 100);
-      self.postMessage({ type: 'progress', percent: pct });
-    }
-  }
-
-  self.postMessage({
-    type: 'done',
-    fullTrackSpecL,
-    fullTrackSpecR,
-    cols,
-    halfFFT: HALF_FFT
-  }, [fullTrackSpecL.buffer, fullTrackSpecR.buffer]);
-};
-`;
-
-const workerBlob = new Blob([workerCode], { type: 'application/javascript' });
-const workerUrl = URL.createObjectURL(workerBlob);
-let fftWorker = null;
 
 // Audio Context & State
 const audioPlayer = document.getElementById('audioPlayer');
@@ -755,7 +784,7 @@ let stereoSplitter, gainL, gainR, stereoMerger, monoGain, mainOutputGain;
 let postSplitter, postAnalyserL, postAnalyserR;
 let channelMode = 'stereo';
 let isMono = false;
-let gonioScopeMode = 'raw'; // 'raw' or 'post'
+let gonioScopeMode = 'raw';
 let decodedAudioBuffer = null;
 let currentObjectUrl = null;
 let isSeekingWave = false;
@@ -765,29 +794,46 @@ let animFrameId = null;
 let currentMinHz = 20;
 let currentMaxHz = 20000;
 let spectroZoomFactor = 1.0;
-let spectroGainVal = 1.2;
+let spectroGainVal = 1.0;
 let useMelScale = true;
 
 let rtaMinFreq = 20;
 let rtaMaxFreq = 20000;
+let rtaDisplayBoost = 12.0; // Default +12 dB Pro RTA Display Boost
 let rtaCanvasWidth = 900;
 
 let waveZoomFactor = 1.0;
 let waveBaseWidth = 1320;
 
-// Throttled 25 FPS
+// Throttled 30 FPS Loop
 let lastRenderTime = 0;
-const TARGET_FPS = 25;
+const TARGET_FPS = 20;
 const FRAME_INTERVAL = 1000 / TARGET_FPS; 
 
-// Upgraded to 4096-Point FFT (2048 Bins = 10.7 Hz/bin Frequency Resolution)
-const FFT_SIZE = 4096;
-const HALF_FFT = FFT_SIZE >>> 1;
+// ULTRA-HD 8192 FFT
+const FFT_SIZE = 8192;
+const HALF_FFT = FFT_SIZE >>> 1; // 4096
 
 let fullTrackSpecL = null;
 let fullTrackSpecR = null;
 let specCols = 0;
 let specHalfFFT = HALF_FFT;
+
+// Float32 Buffers
+const floatFreqL = new Float32Array(1024);
+const floatFreqR = new Float32Array(1024);
+const floatTimeL = new Float32Array(2048);
+const floatTimeR = new Float32Array(2048);
+
+// Temporal Smoothing Buffers
+const smoothedFreqL = new Float32Array(1024).fill(-100);
+const smoothedFreqR = new Float32Array(1024).fill(-100);
+
+// Peak Hold State
+let peakHoldL = -100;
+let peakHoldR = -100;
+let peakHoldDecayL = 0;
+let peakHoldDecayR = 0;
 
 const loadingOverlay = document.getElementById('loadingOverlay');
 const progressBar = document.getElementById('progressBar');
@@ -812,22 +858,19 @@ function hideLoading() {
 function hzToMel(hz) { return 2595 * Math.log10(1 + Math.max(0, hz) / 700); }
 function melToHz(mel) { return 700 * (Math.pow(10, Math.max(0, mel) / 2595) - 1); }
 
-// High Precision 1024-Level Palette
+// High Precision 1024-Level Palette (iZotope RX Palette Engine)
 const colLUT = [];
 (function buildColorLUT() {
   const stops = [
-    [0.00, [4, 2, 14]],      // Deep black/purple
-    [0.05, [18, 8, 48]],     // Indigo
-    [0.12, [42, 12, 95]],    // Violet
-    [0.20, [85, 18, 135]],   // Purple
-    [0.30, [140, 25, 140]],  // Magenta
-    [0.40, [190, 38, 110]],  // Crimson
-    [0.50, [225, 65, 70]],   // Orange Red
-    [0.60, [245, 105, 40]],  // Orange
-    [0.70, [255, 155, 25]],  // Gold
-    [0.80, [255, 200, 35]],  // Yellow
-    [0.90, [255, 235, 110]], // Lemon
-    [1.00, [255, 255, 230]]  // White peak
+    [0.00, [4, 3, 12]],       // -100 dB
+    [0.15, [14, 10, 42]],     // -85 dB
+    [0.30, [45, 12, 95]],     // -70 dB
+    [0.45, [110, 20, 130]],   // -55 dB
+    [0.60, [185, 30, 85]],    // -40 dB
+    [0.75, [230, 80, 25]],    // -25 dB
+    [0.88, [255, 175, 20]],   // -12 dB
+    [0.96, [255, 235, 80]],   // -4 dB
+    [1.00, [255, 255, 240]]   // 0 dB
   ];
   const LUT_SIZE = 1024;
   for (let v = 0; v < LUT_SIZE; v++) {
@@ -877,29 +920,33 @@ const btnScaleMel = document.getElementById('btnScaleMel');
 const btnScaleLinear = document.getElementById('btnScaleLinear');
 const rtaMinInput = document.getElementById('rtaMinInput');
 const rtaMaxInput = document.getElementById('rtaMaxInput');
+const selectRtaBoost = document.getElementById('selectRtaBoost');
 
 const waveCanvas = document.getElementById('waveformCanvas');
 const waveCtx = waveCanvas.getContext('2d');
 const gonioCanvas = document.getElementById('gonioCanvas');
 const gonioCtx = gonioCanvas.getContext('2d');
+
 const specCanvas = document.getElementById('spectrumCanvas');
 const specCtx = specCanvas.getContext('2d');
+const levelMeterCanvas = document.getElementById('levelMeterCanvas');
+const levelMeterCtx = levelMeterCanvas.getContext('2d');
+
 const specLCanvas = document.getElementById('specL');
 const specLCtx = specLCanvas.getContext('2d');
 const specRCanvas = document.getElementById('specR');
 const specRCtx = specRCanvas.getContext('2d');
+
 const waveScrollArea = document.getElementById('waveScrollArea');
 const rtaScrollArea = document.getElementById('rtaScrollArea');
 const specScrollArea = document.getElementById('specScrollArea');
 const specSpacer = document.getElementById('specSpacer');
 
-// Spacebar Key Listener for Play / Pause
+// Spacebar Key Listener
 window.addEventListener('keydown', (e) => {
   const activeEl = document.activeElement;
-  if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
-    if (activeEl.type === 'number' || activeEl.type === 'text') {
-      return;
-    }
+  if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
+    if (activeEl.type === 'number' || activeEl.type === 'text') return;
   }
 
   if (e.code === 'Space' || e.key === ' ') {
@@ -915,17 +962,20 @@ function initWebAudio() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   mediaSource = audioCtx.createMediaElementSource(audioPlayer);
 
-  // Raw Track Splitter & Analysers (Unfiltered track data)
   rawSplitter = audioCtx.createChannelSplitter(2);
   analyserL = audioCtx.createAnalyser();
   analyserR = audioCtx.createAnalyser();
   analyserL.fftSize = 2048;
   analyserR.fftSize = 2048;
+  analyserL.minDecibels = -100;
+  analyserL.maxDecibels = 0;
+  analyserR.minDecibels = -100;
+  analyserR.maxDecibels = 0;
+
   mediaSource.connect(rawSplitter);
   rawSplitter.connect(analyserL, 0);
   rawSplitter.connect(analyserR, 1);
 
-  // Stereo Path (Splitter -> L/R Gains -> Merger)
   stereoSplitter = audioCtx.createChannelSplitter(2);
   gainL = audioCtx.createGain();
   gainR = audioCtx.createGain();
@@ -937,7 +987,6 @@ function initWebAudio() {
   gainL.connect(stereoMerger, 0, 0);
   gainR.connect(stereoMerger, 0, 1);
 
-  // Dedicated Mono Path (Natively forced to 1-channel downmix by W3C spec)
   monoGain = audioCtx.createGain();
   monoGain.channelCount = 1;
   monoGain.channelCountMode = "explicit";
@@ -945,7 +994,6 @@ function initWebAudio() {
 
   mediaSource.connect(monoGain);
 
-  // Main Output Bus (Explicit 2 Channels so mono upmixes to dual equal channels for scope)
   mainOutputGain = audioCtx.createGain();
   mainOutputGain.channelCount = 2;
   mainOutputGain.channelCountMode = "explicit";
@@ -954,12 +1002,15 @@ function initWebAudio() {
   stereoMerger.connect(mainOutputGain);
   monoGain.connect(mainOutputGain);
 
-  // Post-Routing Splitter & Analysers for Goniometer Post-Routing Scope View
   postSplitter = audioCtx.createChannelSplitter(2);
   postAnalyserL = audioCtx.createAnalyser();
   postAnalyserR = audioCtx.createAnalyser();
   postAnalyserL.fftSize = 2048;
   postAnalyserR.fftSize = 2048;
+  postAnalyserL.minDecibels = -100;
+  postAnalyserL.maxDecibels = 0;
+  postAnalyserR.minDecibels = -100;
+  postAnalyserR.maxDecibels = 0;
 
   mainOutputGain.connect(postSplitter);
   postSplitter.connect(postAnalyserL, 0);
@@ -975,12 +1026,10 @@ function applyChannelRouting() {
   const t = audioCtx.currentTime;
 
   if (isMono) {
-    // Turn ON Native Mono Path, Mute Stereo Path
     gainL.gain.setValueAtTime(0.0, t);
     gainR.gain.setValueAtTime(0.0, t);
     monoGain.gain.setValueAtTime(1.0, t);
   } else {
-    // Turn OFF Mono Path, Activate Stereo Path
     monoGain.gain.setValueAtTime(0.0, t);
 
     if (channelMode === 'stereo') {
@@ -1029,6 +1078,11 @@ btnGonioScopeMode.addEventListener('click', () => {
   if (audioPlayer.paused) drawGoniometer();
 });
 
+selectRtaBoost.addEventListener('change', (e) => {
+  rtaDisplayBoost = parseFloat(e.target.value) || 0;
+  if (audioPlayer.paused) drawSpectrumAnalyzer();
+});
+
 function getContainerWidth(el) {
   const rect = el.getBoundingClientRect();
   const cs = getComputedStyle(el);
@@ -1038,21 +1092,23 @@ function getContainerWidth(el) {
 }
 
 function updateRTACanvasWidth() {
-  rtaCanvasWidth = getContainerWidth(rtaScrollArea);
-  specCanvas.width = rtaCanvasWidth;
-  specCanvas.style.width = rtaCanvasWidth + 'px';
+  const containerW = getContainerWidth(rtaScrollArea);
+  const meterW = 95;
+  const specW = Math.max(200, containerW - meterW - 4);
+
+  specCanvas.width = specW;
+  specCanvas.style.width = specW + 'px';
+
+  levelMeterCanvas.width = meterW;
+  levelMeterCanvas.style.width = meterW + 'px';
+  rtaCanvasWidth = specW;
 }
 
 async function loadAudioFile(file) {
   if (!file) return;
 
   try {
-    showLoading("Initializing Web Audio...");
-    initWebAudio();
-
-    if (audioCtx.state === 'suspended') {
-      await audioCtx.resume();
-    }
+    showLoading("Preparing audio file...");
 
     if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
     currentObjectUrl = URL.createObjectURL(file);
@@ -1061,9 +1117,23 @@ async function loadAudioFile(file) {
     fileNameDisplay.innerText = `Analyzing "${file.name}"...`;
     btnPlayPause.disabled = true;
 
-    showLoading("Decoding audio file...");
+    showLoading("Initializing Web Audio Engine...");
+    initWebAudio();
+
+    if (audioCtx && audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+
+    showLoading("Decoding audio buffer...");
     const arrayBuffer = await file.arrayBuffer();
-    decodedAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+    try {
+      decodedAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    } catch (decodeErr) {
+      decodedAudioBuffer = await new Promise((resolve, reject) => {
+        audioCtx.decodeAudioData(arrayBuffer.slice(0), resolve, reject);
+      });
+    }
 
     waveBaseWidth = getContainerWidth(waveScrollArea);
     updateRTACanvasWidth();
@@ -1071,7 +1141,7 @@ async function loadAudioFile(file) {
     updateLoading(20, "Building Stereo Waveform...");
     renderDarwinWaveformToOffscreen();
 
-    updateLoading(35, "HD 4096-FFT Spectral Analysis...");
+    updateLoading(35, "Ultra-HD 8192-FFT Spectral Analysis...");
 
     processSpectrogramData(decodedAudioBuffer, () => {
       fileNameDisplay.innerText = file.name;
@@ -1083,11 +1153,12 @@ async function loadAudioFile(file) {
         if (animFrameId) cancelAnimationFrame(animFrameId);
         renderLoop();
       }).catch(err => {
-        console.log("Autoplay blocked, press Play/Spacebar:", err);
+        console.log("Autoplay waiting for user play action:", err);
         btnPlayPause.innerText = 'Play';
         updateOverlays();
         drawGoniometer();
         drawSpectrumAnalyzer();
+        drawLevelMeter();
       });
     });
 
@@ -1104,24 +1175,21 @@ fileInput.addEventListener('change', (e) => {
   }
 });
 
-// FULL-PAGE DRAG AND DROP HANDLERS
+// Full Page Drag & Drop
 window.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   dropOverlay.classList.add('active');
 });
 
 window.addEventListener('dragleave', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   if (e.clientX <= 0 || e.clientY <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
     dropOverlay.classList.remove('active');
   }
 });
 
 window.addEventListener('drop', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   dropOverlay.classList.remove('active');
   if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
     loadAudioFile(e.dataTransfer.files[0]);
@@ -1141,7 +1209,6 @@ btnPlayPause.addEventListener('click', () => {
   }
 });
 
-// ZOOM WITH PLAYHEAD CENTER LOCK
 waveZoom.addEventListener('input', () => {
   waveZoomFactor = parseFloat(waveZoom.value);
   if (!decodedAudioBuffer) return;
@@ -1217,7 +1284,7 @@ function renderDarwinWaveformToOffscreen() {
     const barHeight = Math.max(2, rmsTotal * scaleFactor);
 
     let color = '#22c55e'; // Green: In-Phase
-    if (corr < 0) color = '#ef4444'; // Red: Out-of-Phase / Anti-Phase
+    if (corr < 0) color = '#ef4444'; // Red: Anti-Phase
     else if (corr < 0.5) color = '#eab308'; // Yellow: Wide Stereo
 
     ctx.fillStyle = color;
@@ -1226,105 +1293,51 @@ function renderDarwinWaveformToOffscreen() {
   updateOverlays();
 }
 
-// HIGH-DENSITY SPECTROGRAM PROCESSOR (Up to 32,000 Columns)
+// ULTRA-HD 16,000 COLUMN SPECTROGRAM ENGINE
 function processSpectrogramData(buffer, onComplete) {
   const dataL = buffer.getChannelData(0);
   const dataR = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : dataL;
   const totalSamples = dataL.length;
 
   if (totalSamples < FFT_SIZE) {
-    fullTrackSpecL = new Float32Array(0);
-    fullTrackSpecR = new Float32Array(0);
+    fullTrackSpecL = new Uint8Array(0);
+    fullTrackSpecR = new Uint8Array(0);
     specCols = 0;
     if (onComplete) onComplete();
     return;
   }
 
-  // Generate 32,000 high-density columns across track
-  const targetCols = Math.min(32000, Math.max(4000, Math.floor(totalSamples / 128)));
-  const hopSize = Math.max(64, Math.floor((totalSamples - FFT_SIZE) / targetCols));
+  const targetCols = Math.min(16000, Math.max(3000, Math.floor(totalSamples / 128)));
+  const hopSize = Math.max(32, Math.floor((totalSamples - FFT_SIZE) / targetCols));
   const cols = Math.floor((totalSamples - FFT_SIZE) / hopSize);
   const halfFFT = HALF_FFT;
 
-  const isFileProtocol = (window.location.protocol === 'file:');
-
-  if (isFileProtocol || typeof Worker === 'undefined') {
-    runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
-    return;
-  }
-
-  let workerFinished = false;
-
-  try {
-    if (fftWorker) fftWorker.terminate();
-    fftWorker = new Worker(workerUrl);
-
-    const fallbackTimer = setTimeout(() => {
-      if (!workerFinished) {
-        console.warn("Worker timeout guard triggered, completing on main thread...");
-        if (fftWorker) fftWorker.terminate();
-        fftWorker = null;
-        runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
-      }
-    }, 2500);
-
-    fftWorker.onmessage = function(e) {
-      if (e.data.type === 'progress') {
-        const p = 35 + Math.round(e.data.percent * 0.60);
-        updateLoading(p, `Analyzing 4096-FFT Spectrum (${e.data.percent}%)...`);
-      } else if (e.data.type === 'done') {
-        workerFinished = true;
-        clearTimeout(fallbackTimer);
-        fullTrackSpecL = e.data.fullTrackSpecL;
-        fullTrackSpecR = e.data.fullTrackSpecR;
-        specCols = e.data.cols;
-        specHalfFFT = e.data.halfFFT;
-
-        updateLoading(100, "Analysis Complete!");
-        setTimeout(() => {
-          renderSpectrogramViewport();
-          if (onComplete) onComplete();
-        }, 50);
-      }
-    };
-
-    fftWorker.onerror = function() {
-      if (!workerFinished) {
-        workerFinished = true;
-        clearTimeout(fallbackTimer);
-        if (fftWorker) fftWorker.terminate();
-        fftWorker = null;
-        runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
-      }
-    };
-
-    fftWorker.postMessage({ dataL, dataR, FFT_SIZE, HOP_SIZE: hopSize });
-
-  } catch (e) {
-    console.warn("Worker creation error, running fast fallback:", e);
-    runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
-  }
+  runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete);
 }
 
 function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplete) {
   const fastFFT = new FastFFT(FFT_SIZE);
-  const hannWindow = new Float32Array(FFT_SIZE);
+
+  // Blackman-Harris 4-Term Window Table (-92 dB Side-Lobe Attenuation)
+  const windowTable = new Float32Array(FFT_SIZE);
+  const a0 = 0.35875, a1 = 0.48829, a2 = 0.14128, a3 = 0.01168;
   for (let n = 0; n < FFT_SIZE; n++) {
-    hannWindow[n] = 0.5 * (1 - Math.cos(2 * Math.PI * n / (FFT_SIZE - 1)));
+    const term = (2 * Math.PI * n) / (FFT_SIZE - 1);
+    windowTable[n] = a0 - a1 * Math.cos(term) + a2 * Math.cos(2 * term) - a3 * Math.cos(3 * term);
   }
 
-  fullTrackSpecL = new Float32Array(cols * halfFFT);
-  fullTrackSpecR = new Float32Array(cols * halfFFT);
+  fullTrackSpecL = new Uint8Array(cols * halfFFT);
+  fullTrackSpecR = new Uint8Array(cols * halfFFT);
   specCols = cols;
   specHalfFFT = halfFFT;
 
   const colDataL = new Float32Array(FFT_SIZE);
   const colDataR = new Float32Array(FFT_SIZE);
-  const binsL = new Float32Array(halfFFT);
-  const binsR = new Float32Array(halfFFT);
+  const binsL = new Uint8Array(halfFFT);
+  const binsR = new Uint8Array(halfFFT);
 
   let x = 0;
-  const CHUNK_SIZE = 1200; 
+  const CHUNK_SIZE = 600; 
 
   function processChunk() {
     const end = Math.min(cols, x + CHUNK_SIZE);
@@ -1336,8 +1349,8 @@ function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplet
         colDataR[n] = dataR[startIdx + n] || 0;
       }
 
-      fastFFT.transform(colDataL, hannWindow, binsL);
-      fastFFT.transform(colDataR, hannWindow, binsR);
+      fastFFT.transform(colDataL, windowTable, binsL);
+      fastFFT.transform(colDataR, windowTable, binsR);
 
       const offset = x * halfFFT;
       fullTrackSpecL.set(binsL, offset);
@@ -1345,7 +1358,7 @@ function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplet
     }
 
     const pct = Math.round((x / cols) * 100);
-    updateLoading(35 + Math.round(pct * 0.60), `Analyzing Spectrum (${pct}%)...`);
+    updateLoading(35 + Math.round(pct * 0.60), `Analyzing 8192-FFT Ultra-HD Spectrum (${pct}%)...`);
 
     if (x < cols) {
       setTimeout(processChunk, 0);
@@ -1354,24 +1367,14 @@ function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplet
       setTimeout(() => {
         renderSpectrogramViewport();
         if (onComplete) onComplete();
-      }, 50);
+      }, 30);
     }
   }
 
   processChunk();
 }
 
-// 1D Catmull-Rom Cubic Hermite Spline Interpolator
-function cubicHermite(p0, p1, p2, p3, t) {
-  const a = -0.5 * p0 + 1.5 * p1 - 1.5 * p2 + 0.5 * p3;
-  const b = p0 - 2.5 * p1 + 2.0 * p2 - 0.5 * p3;
-  const c = -0.5 * p0 + 0.5 * p2;
-  const d = p1;
-  const val = a * t * t * t + b * t * t + c * t + d;
-  return val < 0 ? 0 : val;
-}
-
-// 2D BICUBIC CATMULL-ROM SURFACE INTERPOLATION ENGINE
+// BILINEAR ANTI-ALIASED SPECTROGRAM ENGINE
 function renderSpectrogramViewport() {
   if (!fullTrackSpecL || !specCols || !decodedAudioBuffer) return;
 
@@ -1403,11 +1406,8 @@ function renderSpectrogramViewport() {
   const dL = imgL.data;
   const dR = imgR.data;
 
-  // Pre-calculate 4-Point Vertical Bin Indices for 2D Bicubic Filtering
-  const pyB_m1 = new Uint32Array(renderH);
-  const pyB_0  = new Uint32Array(renderH);
-  const pyB_1  = new Uint32Array(renderH);
-  const pyB_2  = new Uint32Array(renderH);
+  const pyB_0 = new Uint32Array(renderH);
+  const pyB_1 = new Uint32Array(renderH);
   const pyB_fy = new Float32Array(renderH);
 
   const minMel = hzToMel(currentMinHz);
@@ -1429,10 +1429,8 @@ function renderSpectrogramViewport() {
     const b0 = Math.floor(exactBin);
     const fy = exactBin - b0;
 
-    pyB_m1[py] = Math.max(0, b0 - 1);
-    pyB_0[py]  = b0;
-    pyB_1[py]  = Math.min(specHalfFFT - 1, b0 + 1);
-    pyB_2[py]  = Math.min(specHalfFFT - 1, b0 + 2);
+    pyB_0[py] = b0;
+    pyB_1[py] = Math.min(specHalfFFT - 1, b0 + 1);
     pyB_fy[py] = fy;
   }
 
@@ -1445,45 +1443,38 @@ function renderSpectrogramViewport() {
     const exactCol = trackX * colRatio;
 
     if (colRatio <= 1.0) {
-      // ZOOMED IN: 2D Bicubic Catmull-Rom Surface Filtering (16-Point Spatial Matrix)
+      // ZOOMED IN: Bilinear Anti-Aliased Interpolation
       const c0 = Math.floor(exactCol);
+      const c1 = Math.min(specCols - 1, c0 + 1);
       const fx = exactCol - c0;
 
-      const cm1 = Math.max(0, c0 - 1);
-      const c1  = Math.min(specCols - 1, c0 + 1);
-      const c2  = Math.min(specCols - 1, c0 + 2);
-
-      const off_m1 = cm1 * specHalfFFT;
-      const off_0  = c0  * specHalfFFT;
-      const off_1  = c1  * specHalfFFT;
-      const off_2  = c2  * specHalfFFT;
+      const off_0 = c0 * specHalfFFT;
+      const off_1 = c1 * specHalfFFT;
 
       for (let py = 0; py < renderH; py++) {
-        const bm1 = pyB_m1[py];
-        const b0  = pyB_0[py];
-        const b1  = pyB_1[py];
-        const b2  = pyB_2[py];
-        const fy  = pyB_fy[py];
+        const b0 = pyB_0[py];
+        const b1 = pyB_1[py];
+        const fy = pyB_fy[py];
 
-        // Left Channel Bicubic Interpolation
-        const y_m1_L = cubicHermite(fullTrackSpecL[off_m1 + bm1], fullTrackSpecL[off_m1 + b0], fullTrackSpecL[off_m1 + b1], fullTrackSpecL[off_m1 + b2], fy);
-        const y_0_L  = cubicHermite(fullTrackSpecL[off_0  + bm1], fullTrackSpecL[off_0  + b0], fullTrackSpecL[off_0  + b1], fullTrackSpecL[off_0  + b2], fy);
-        const y_1_L  = cubicHermite(fullTrackSpecL[off_1  + bm1], fullTrackSpecL[off_1  + b0], fullTrackSpecL[off_1  + b1], fullTrackSpecL[off_1  + b2], fy);
-        const y_2_L  = cubicHermite(fullTrackSpecL[off_2  + bm1], fullTrackSpecL[off_2  + b0], fullTrackSpecL[off_2  + b1], fullTrackSpecL[off_2  + b2], fy);
+        const v00_L = fullTrackSpecL[off_0 + b0];
+        const v10_L = fullTrackSpecL[off_1 + b0];
+        const v01_L = fullTrackSpecL[off_0 + b1];
+        const v11_L = fullTrackSpecL[off_1 + b1];
 
-        const valL = cubicHermite(y_m1_L, y_0_L, y_1_L, y_2_L, fx) * spectroGainVal;
+        const valL_raw = (1 - fx) * (1 - fy) * v00_L + fx * (1 - fy) * v10_L + (1 - fx) * fy * v01_L + fx * fy * v11_L;
+        const valL = Math.max(0, Math.min(1, (valL_raw / 255.0) * spectroGainVal));
 
-        // Right Channel Bicubic Interpolation
-        const y_m1_R = cubicHermite(fullTrackSpecR[off_m1 + bm1], fullTrackSpecR[off_m1 + b0], fullTrackSpecR[off_m1 + b1], fullTrackSpecR[off_m1 + b2], fy);
-        const y_0_R  = cubicHermite(fullTrackSpecR[off_0  + bm1], fullTrackSpecR[off_0  + b0], fullTrackSpecR[off_0  + b1], fullTrackSpecR[off_0  + b2], fy);
-        const y_1_R  = cubicHermite(fullTrackSpecR[off_1  + bm1], fullTrackSpecR[off_1  + b0], fullTrackSpecR[off_1  + b1], fullTrackSpecR[off_1  + b2], fy);
-        const y_2_R  = cubicHermite(fullTrackSpecR[off_2  + bm1], fullTrackSpecR[off_2  + b0], fullTrackSpecR[off_2  + b1], fullTrackSpecR[off_2  + b2], fy);
+        const v00_R = fullTrackSpecR[off_0 + b0];
+        const v10_R = fullTrackSpecR[off_1 + b0];
+        const v01_R = fullTrackSpecR[off_0 + b1];
+        const v11_R = fullTrackSpecR[off_1 + b1];
 
-        const valR = cubicHermite(y_m1_R, y_0_R, y_1_R, y_2_R, fx) * spectroGainVal;
+        const valR_raw = (1 - fx) * (1 - fy) * v00_R + fx * (1 - fy) * v10_R + (1 - fx) * fy * v01_R + fx * fy * v11_R;
+        const valR = Math.max(0, Math.min(1, (valR_raw / 255.0) * spectroGainVal));
 
         const off = (py * renderW + vx) * 4;
-        const lutIdxL = Math.round(Math.max(0, Math.min(1023, valL * 4.01)));
-        const lutIdxR = Math.round(Math.max(0, Math.min(1023, valR * 4.01)));
+        const lutIdxL = Math.round(valL * 1023);
+        const lutIdxR = Math.round(valR * 1023);
 
         const cL = colLUT[lutIdxL];
         const cR = colLUT[lutIdxR];
@@ -1505,18 +1496,18 @@ function renderSpectrogramViewport() {
 
         for (let c = startC; c <= endC; c++) {
           const offset = c * specHalfFFT;
-          const valL = fullTrackSpecL[offset + b0] + (fullTrackSpecL[offset + b1] - fullTrackSpecL[offset + b0]) * bf;
-          const valR = fullTrackSpecR[offset + b0] + (fullTrackSpecR[offset + b1] - fullTrackSpecR[offset + b0]) * bf;
+          const valL = (fullTrackSpecL[offset + b0] + (fullTrackSpecL[offset + b1] - fullTrackSpecL[offset + b0]) * bf) / 255;
+          const valR = (fullTrackSpecR[offset + b0] + (fullTrackSpecR[offset + b1] - fullTrackSpecR[offset + b0]) * bf) / 255;
           if (valL > maxL) maxL = valL;
           if (valR > maxR) maxR = valR;
         }
 
-        const vL = maxL * spectroGainVal;
-        const vR = maxR * spectroGainVal;
+        const vL = Math.max(0, Math.min(1, maxL * spectroGainVal));
+        const vR = Math.max(0, Math.min(1, maxR * spectroGainVal));
 
         const off = (py * renderW + vx) * 4;
-        const lutIdxL = Math.round(Math.max(0, Math.min(1023, vL * 4.01)));
-        const lutIdxR = Math.round(Math.max(0, Math.min(1023, vR * 4.01)));
+        const lutIdxL = Math.round(vL * 1023);
+        const lutIdxR = Math.round(vR * 1023);
 
         const cL = colLUT[lutIdxL];
         const cR = colLUT[lutIdxR];
@@ -1660,7 +1651,6 @@ specCanvas.addEventListener('mouseleave', () => {
   drawSpectrumAnalyzer();
 });
 
-// ACCURATE INDEPENDENT SEEKING HANDLERS
 function seekWaveform(clientX) {
   if (!audioPlayer.duration) return;
   const rect = waveCanvas.getBoundingClientRect();
@@ -1712,9 +1702,9 @@ window.addEventListener('mouseup', () => {
 
 function updateOverlays() {
   if (!audioPlayer.duration) return;
-  const cur = audioPlayer.currentTime;
+  const cur = audioPlayer.currentTime || 0;
   const dur = audioPlayer.duration;
-  const pct = cur / dur;
+  const pct = dur > 0 ? cur / dur : 0;
 
   timeText.innerText = `${formatTime(cur)} / ${formatTime(dur)}`;
 
@@ -1728,13 +1718,15 @@ function updateOverlays() {
   const globalPlayX = pct * totalTrackWidth;
   const viewPlayX = Math.round((globalPlayX - scrollLeft) * dpr);
 
-  specLCtx.drawImage(offscreenSpecL, 0, 0);
-  specRCtx.drawImage(offscreenSpecR, 0, 0);
+  if (fullTrackSpecL && specCols) {
+    specLCtx.drawImage(offscreenSpecL, 0, 0);
+    specRCtx.drawImage(offscreenSpecR, 0, 0);
+  }
 
   const renderW = cssW * dpr;
   const renderH = cssH * dpr;
 
-  if (viewPlayX >= 0 && viewPlayX <= renderW) {
+  if (viewPlayX >= 0 && viewPlayX <= renderW && fullTrackSpecL && specCols) {
     const barW = Math.max(2, Math.round(2 * dpr));
     specLCtx.fillStyle = '#00f3ff';
     specLCtx.fillRect(viewPlayX - Math.floor(barW / 2), 0, barW, renderH);
@@ -1745,6 +1737,8 @@ function updateOverlays() {
 
   if (hoverSpectro.canvas) {
     const targetCtx = hoverSpectro.isLeft ? specLCtx : specRCtx;
+    const targetData = hoverSpectro.isLeft ? fullTrackSpecL : fullTrackSpecR;
+
     const pctY = hoverSpectro.y / cssH;
     let freqHz;
     if (useMelScale) {
@@ -1760,6 +1754,20 @@ function updateOverlays() {
     const hoverPctX = hoverGlobalX / totalTrackWidth;
     const hoverSec = hoverPctX * dur;
 
+    // Calculate Spectrogram Gain dBFS at cursor position (x, y)
+    let dbText = '-100.0 dBFS';
+    if (targetData && specCols > 0) {
+      const sampleRate = decodedAudioBuffer ? decodedAudioBuffer.sampleRate : 44100;
+      const binWidth = sampleRate / FFT_SIZE;
+      const hoverBin = Math.max(0, Math.min(specHalfFFT - 1, Math.round(freqHz / binWidth)));
+      const hoverCol = Math.max(0, Math.min(specCols - 1, Math.floor(hoverPctX * specCols)));
+      const rawUint8 = targetData[hoverCol * specHalfFFT + hoverBin] || 0;
+
+      const normVal = rawUint8 / 255.0;
+      const dbFS = (normVal * 100) - 100;
+      dbText = dbFS <= -99 ? '-∞' : (dbFS >= 0 ? '0.0' : dbFS.toFixed(1)) + ' dBFS';
+    }
+
     const hX = hoverSpectro.x * dpr;
     const hY = hoverSpectro.y * dpr;
 
@@ -1772,7 +1780,7 @@ function updateOverlays() {
     targetCtx.stroke();
     targetCtx.setLineDash([]);
 
-    const text = `${freqHz.toLocaleString()} Hz  |  ${formatTime(hoverSec)}`;
+    const text = `${freqHz.toLocaleString()} Hz  |  Gain: ${dbText}  |  ${formatTime(hoverSec)}`;
     const fontSize = Math.round(12 * dpr);
     targetCtx.font = `bold ${fontSize}px sans-serif`;
     const txtW = targetCtx.measureText(text).width;
@@ -1793,7 +1801,6 @@ function updateOverlays() {
     targetCtx.fillText(text, tipX + boxPad, tipY);
   }
 
-  // Waveform Playhead Overlay
   const waveW = waveCanvas.width;
   waveCtx.clearRect(0, 0, waveW, waveCanvas.height);
   waveCtx.drawImage(offscreenWaveCanvas, 0, 0);
@@ -1802,7 +1809,6 @@ function updateOverlays() {
   waveCtx.fillRect(px - 1, 0, 2, waveCanvas.height);
 }
 
-// 25 FPS DISPLAY LOOP
 function renderLoop(timestamp) {
   if (audioPlayer.paused) return;
 
@@ -1814,6 +1820,7 @@ function renderLoop(timestamp) {
     updateOverlays();
     drawGoniometer();
     drawSpectrumAnalyzer();
+    drawLevelMeter();
   }
 
   animFrameId = requestAnimationFrame(renderLoop);
@@ -1844,22 +1851,10 @@ function drawGoniometer() {
   gonioCtx.moveTo(cx + scale, cy - scale); gonioCtx.lineTo(cx - scale, cy + scale);
   gonioCtx.stroke();
 
-  gonioCtx.fillStyle = '#666';
-  gonioCtx.font = '9px sans-serif';
-  gonioCtx.textAlign = 'center';
-  for (let a = 0; a < 360; a += 45) {
-    const rad = (a - 90) * Math.PI / 180;
-    const x1 = cx + Math.cos(rad) * scale * 0.5 * 1.12;
-    const y1 = cy + Math.sin(rad) * scale * 0.88 * 1.12;
-    gonioCtx.fillText(a, x1, y1 + 3);
-  }
-  gonioCtx.textAlign = 'start';
-
-  // L & R Labels Matched with Spectrum Analyzer Colors
   gonioCtx.font = 'bold 12px sans-serif';
-  gonioCtx.fillStyle = '#00f3ff'; // Left Channel Cyan
+  gonioCtx.fillStyle = '#00f3ff';
   gonioCtx.fillText('L', cx - scale - 15, cy - scale - 8);
-  gonioCtx.fillStyle = '#ff007f'; // Right Channel Magenta
+  gonioCtx.fillStyle = '#ff007f';
   gonioCtx.fillText('R', cx + scale + 5, cy - scale - 8);
 
   gonioCtx.strokeStyle = '#22c55e';
@@ -1874,7 +1869,6 @@ function drawGoniometer() {
   gonioCtx.font = '8px sans-serif';
   gonioCtx.fillText('In-Phase Zone', cx + scale * 0.5 + 5, cy - 4);
 
-  // Pick Scope Source: Raw Track View vs Post Mono ON Routing View
   const activeGonioL = (gonioScopeMode === 'post' && postAnalyserL) ? postAnalyserL : analyserL;
   const activeGonioR = (gonioScopeMode === 'post' && postAnalyserR) ? postAnalyserR : analyserR;
 
@@ -1913,9 +1907,11 @@ function drawGoniometer() {
   gonioCtx.textAlign = 'start';
 }
 
+// SPECTRUM ANALYZER WITH SHARED MIDDLE dB SCALE COLUMN
 function drawSpectrumAnalyzer() {
   const w = specCanvas.width;
   const h = specCanvas.height;
+
   specCtx.fillStyle = '#040308';
   specCtx.fillRect(0, 0, w, h);
 
@@ -1924,96 +1920,342 @@ function drawSpectrumAnalyzer() {
   const logMax = Math.log10(rtaMaxFreq);
   const logRange = logMax - logMin;
 
-  specCtx.strokeStyle = '#181628';
-  specCtx.lineWidth = 1;
-  specCtx.fillStyle = '#666';
-  specCtx.font = '10px sans-serif';
+  const maxDb = 0;
+  const minDb = -90;
+  const dbRange = maxDb - minDb;
 
-  const dbSteps = [0, -12, -24, -36, -48, -60, -72];
-  for (let db of dbSteps) {
-    const y = ((0 - db) / 72) * h;
-    specCtx.beginPath();
-    specCtx.moveTo(0, y); specCtx.lineTo(w, y);
-    specCtx.stroke();
-    const label = `${db} dB`;
-    specCtx.fillText(label, 8, y - 3);
+  const marginLeft = 12;
+  const marginRight = 55; // Space reserved for Shared Middle Axis Gutter
+  const marginTop = 22;   // Maximized 0 dBFS plot height
+  const marginBottom = 22;
+
+  const drawWidth = w - marginLeft - marginRight;
+  const drawHeight = h - marginTop - marginBottom;
+
+  function dbToY(db) {
+    const clamped = Math.max(minDb, Math.min(maxDb, db));
+    return marginTop + ((maxDb - clamped) / dbRange) * drawHeight;
   }
 
+  function xToHz(x) {
+    const normX = Math.max(0, Math.min(1, (x - marginLeft) / drawWidth));
+    return rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, normX);
+  }
+
+  function hzToX(f) {
+    const normF = (Math.log10(f) - logMin) / logRange;
+    return marginLeft + normF * drawWidth;
+  }
+
+  // 1. Draw Shared Middle Axis Background Gutter
+  const middleX = w - marginRight;
+  specCtx.fillStyle = '#090814';
+  specCtx.fillRect(middleX, 0, marginRight, h);
+
+  // Vertical Borders for Shared Middle Column
+  specCtx.strokeStyle = '#322f54';
+  specCtx.lineWidth = 1;
+  specCtx.beginPath();
+  specCtx.moveTo(middleX, marginTop - 4); specCtx.lineTo(middleX, h - marginBottom + 4);
+  specCtx.moveTo(w - 1, marginTop - 4); specCtx.lineTo(w - 1, h - marginBottom + 4);
+  specCtx.stroke();
+
+  // 2. Uniform 6 dB Linear Steps Centered in Shared Middle Column
+  const dbSteps = [0, -6, -12, -18, -24, -30, -36, -42, -48, -54, -60, -66, -72, -78, -84, -90];
+  specCtx.font = '9px monospace';
+  specCtx.textAlign = 'center';
+
+  for (let db of dbSteps) {
+    const y = dbToY(db);
+
+    // Horizontal Grid Line across spectrum
+    specCtx.strokeStyle = '#181628';
+    specCtx.beginPath();
+    specCtx.moveTo(marginLeft, y);
+    specCtx.lineTo(middleX, y);
+    specCtx.stroke();
+
+    // Left tick mark (pointing to spectrum)
+    specCtx.strokeStyle = '#322f54';
+    specCtx.beginPath();
+    specCtx.moveTo(middleX - 4, y); specCtx.lineTo(middleX, y);
+    specCtx.stroke();
+
+    // Right tick mark (pointing to level meter)
+    specCtx.beginPath();
+    specCtx.moveTo(w - 4, y); specCtx.lineTo(w, y);
+    specCtx.stroke();
+
+    // Centered dB Label
+    specCtx.fillStyle = db === 0 ? '#00f3ff' : '#888799';
+    specCtx.fillText(`${db}`, middleX + (marginRight / 2), y + 3);
+  }
+
+  // 3. Frequency Grid Lines & Bottom Hz Labels
   const freqGrid = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 12000, 14000, 16000, 18000, 20000];
+  specCtx.fillStyle = '#66657a';
+  specCtx.font = '10px sans-serif';
+
   for (let f of freqGrid) {
     if (f >= rtaMinFreq && f <= rtaMaxFreq) {
-      const x = ((Math.log10(f) - logMin) / logRange) * w;
+      const x = hzToX(f);
+
+      specCtx.strokeStyle = '#181628';
       specCtx.beginPath();
-      specCtx.moveTo(x, 0); specCtx.lineTo(x, h);
+      specCtx.moveTo(x, marginTop);
+      specCtx.lineTo(x, h - marginBottom);
       specCtx.stroke();
+
       const label = f >= 1000 ? `${f / 1000}k` : `${f}`;
-      specCtx.fillText(label, Math.max(4, x + 3), h - 6);
+      specCtx.fillText(label, x, h - 6);
     }
   }
 
-  if (!analyserL || !analyserR) return;
+  if (!analyserL || !analyserR) {
+    specCtx.textAlign = 'start';
+    return;
+  }
 
-  const freqL = new Uint8Array(analyserL.frequencyBinCount);
-  const freqR = new Uint8Array(analyserR.frequencyBinCount);
-  analyserL.getByteFrequencyData(freqL);
-  analyserR.getByteFrequencyData(freqR);
-  const sampleRate = audioCtx.sampleRate || 44100;
+  const sampleRate = audioCtx ? audioCtx.sampleRate : 44100;
+  const numBins = floatFreqL.length; // 1024
   const binWidth = sampleRate / analyserL.fftSize;
 
-  const MAX_POINTS = 600;
-  const step = Math.max(1, Math.floor(w / MAX_POINTS));
+  analyserL.getFloatFrequencyData(floatFreqL);
+  analyserR.getFloatFrequencyData(floatFreqR);
 
+  // Apply Window Compensation (+2.52 dB) + User Selectable RTA Display Boost
+  const totalOffset = 2.52 + rtaDisplayBoost;
+
+  for (let i = 0; i < numBins; i++) {
+    const rawL = floatFreqL[i] + totalOffset;
+    const rawR = floatFreqR[i] + totalOffset;
+
+    smoothedFreqL[i] = rawL > smoothedFreqL[i] ? rawL : (smoothedFreqL[i] * 0.82 + rawL * 0.18);
+    smoothedFreqR[i] = rawR > smoothedFreqR[i] ? rawR : (smoothedFreqR[i] * 0.82 + rawR * 0.18);
+  }
+
+  // Peak-Bin Grouping Plotter Function
   function plotCurve(data, color) {
     specCtx.beginPath();
     specCtx.strokeStyle = color;
-    specCtx.lineWidth = 1.5;
+    specCtx.lineWidth = 1.8;
     let first = true;
-    for (let x = 0; x < w; x += step) {
-      const f = rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, x / w);
-      const binIdx = Math.min(data.length - 1, Math.round(f / binWidth));
-      const val = data[binIdx] || 0;
-      const y = h - (val / 255) * h;
+
+    for (let px = 0; px < drawWidth; px++) {
+      const x = marginLeft + px;
+      const f1 = xToHz(x);
+      const f2 = xToHz(x + 1);
+
+      const bStart = Math.max(0, Math.min(numBins - 1, Math.floor(f1 / binWidth)));
+      const bEnd = Math.max(bStart, Math.min(numBins - 1, Math.ceil(f2 / binWidth)));
+
+      let maxVal = -150;
+      if (bStart === bEnd || bEnd === bStart + 1) {
+        const exactBin = f1 / binWidth;
+        const b0 = Math.floor(exactBin);
+        const b1 = Math.min(numBins - 1, b0 + 1);
+        const frac = exactBin - b0;
+        maxVal = (data[b0] || minDb) * (1 - frac) + (data[b1] || minDb) * frac;
+      } else {
+        for (let b = bStart; b <= bEnd; b++) {
+          if (data[b] > maxVal) maxVal = data[b];
+        }
+      }
+
+      const valDb = Math.max(minDb, Math.min(maxDb, maxVal));
+      const y = dbToY(valDb);
+
       if (first) { specCtx.moveTo(x, y); first = false; }
       else specCtx.lineTo(x, y);
     }
-    if (first) return;
-    const binIdxEnd = Math.min(data.length - 1, Math.round(rtaMaxFreq / binWidth));
-    const valEnd = data[binIdxEnd] || 0;
-    specCtx.lineTo(w, h - (valEnd / 255) * h);
     specCtx.stroke();
   }
 
-  // Channel Tracking Filter for Spectrum Analyzer
   if (channelMode === 'stereo' || channelMode === 'left') {
-    plotCurve(freqL, '#00f3ff');
+    plotCurve(smoothedFreqL, '#00f3ff');
   }
   if (channelMode === 'stereo' || channelMode === 'right') {
-    plotCurve(freqR, '#ff007f');
+    plotCurve(smoothedFreqR, '#ff007f');
   }
 
-  if (hoverRTA.active) {
-    const fHover = rtaMinFreq * Math.pow(rtaMaxFreq / rtaMinFreq, hoverRTA.x / w);
-    const dbHover = Math.round(-72 + (1 - hoverRTA.y / h) * 72);
-    specCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+  // Accurate Crosshair & Tooltip
+  if (hoverRTA.active && hoverRTA.x >= marginLeft && hoverRTA.x <= middleX) {
+    const fHover = xToHz(hoverRTA.x);
+    const clampY = Math.max(marginTop, Math.min(h - marginBottom, hoverRTA.y));
+    const cursorDb = maxDb - ((clampY - marginTop) / drawHeight) * dbRange;
+
+    // Actual Signal Peak dBFS at mouse frequency
+    const hoverBin = Math.min(numBins - 1, Math.round(fHover / binWidth));
+    let signalDb = minDb;
+    if (channelMode === 'left') signalDb = smoothedFreqL[hoverBin];
+    else if (channelMode === 'right') signalDb = smoothedFreqR[hoverBin];
+    else signalDb = Math.max(smoothedFreqL[hoverBin], smoothedFreqR[hoverBin]);
+
+    signalDb = Math.max(minDb, Math.min(maxDb, signalDb));
+
+    // Draw Dot on Spectrum Curve at Mouse Frequency
+    const curveY = dbToY(signalDb);
+    specCtx.fillStyle = '#00f3ff';
+    specCtx.beginPath();
+    specCtx.arc(hoverRTA.x, curveY, 4, 0, 2 * Math.PI);
+    specCtx.fill();
+    specCtx.strokeStyle = '#ffffff';
+    specCtx.lineWidth = 1;
+    specCtx.stroke();
+
+    // Dotted Crosshair Lines
+    specCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
     specCtx.setLineDash([3, 3]);
     specCtx.beginPath();
-    specCtx.moveTo(0, hoverRTA.y); specCtx.lineTo(w, hoverRTA.y);
-    specCtx.moveTo(hoverRTA.x, 0); specCtx.lineTo(hoverRTA.x, h);
+    specCtx.moveTo(marginLeft, hoverRTA.y); specCtx.lineTo(middleX, hoverRTA.y);
+    specCtx.moveTo(hoverRTA.x, marginTop); specCtx.lineTo(hoverRTA.x, h - marginBottom);
     specCtx.stroke();
     specCtx.setLineDash([]);
-    const text = `${Math.round(fHover).toLocaleString()} Hz  |  ${dbHover} dB`;
-    specCtx.font = 'bold 12px sans-serif';
+
+    // Hover Tooltip Box
+    const sigText = signalDb <= -89 ? '-∞' : (signalDb >= 0 ? '+0.0' : signalDb.toFixed(1));
+    const text = `${Math.round(fHover).toLocaleString()} Hz  |  Signal: ${sigText} dBFS  |  Cursor: ${cursorDb.toFixed(1)} dB`;
+    specCtx.font = 'bold 11px sans-serif';
+    specCtx.textAlign = 'left';
     const txtW = specCtx.measureText(text).width;
-    let tipX = hoverRTA.x + 10;
-    let tipY = hoverRTA.y - 10;
-    if (tipX + txtW + 16 > w) tipX = hoverRTA.x - txtW - 20;
-    specCtx.fillStyle = 'rgba(15, 14, 28, 0.9)';
+
+    let tipX = hoverRTA.x + 12;
+    let tipY = hoverRTA.y - 12;
+
+    if (tipX + txtW + 18 > middleX) tipX = hoverRTA.x - txtW - 18;
+    if (tipX < marginLeft + 6) tipX = marginLeft + 6;
+    if (tipY - 22 < marginTop) tipY = hoverRTA.y + 26;
+
+    specCtx.fillStyle = 'rgba(15, 14, 28, 0.95)';
     specCtx.strokeStyle = '#9d72ff';
-    specCtx.fillRect(tipX, tipY - 16, txtW + 16, 24);
-    specCtx.strokeRect(tipX, tipY - 16, txtW + 16, 24);
-    specCtx.fillStyle = '#66fcf1';
-    specCtx.fillText(text, tipX + 8, tipY);
+    specCtx.lineWidth = 1;
+    specCtx.fillRect(tipX, tipY - 16, txtW + 16, 22);
+    specCtx.strokeRect(tipX, tipY - 16, txtW + 16, 22);
+    specCtx.fillStyle = '#00f3ff';
+    specCtx.fillText(text, tipX + 8, tipY - 1);
   }
+
+  specCtx.textAlign = 'start';
+}
+
+// REALTIME STEREO PEAK LEVEL METER
+function drawLevelMeter() {
+  const w = levelMeterCanvas.width;
+  const h = levelMeterCanvas.height;
+  levelMeterCtx.fillStyle = '#020106';
+  levelMeterCtx.fillRect(0, 0, w, h);
+
+  const marginTop = 22; // Maximized 0 dBFS plot height aligned with Spectrum
+  const marginBottom = 22;
+  const drawHeight = h - marginTop - marginBottom;
+  const maxDb = 0;
+  const minDb = -90;
+  const dbRange = maxDb - minDb;
+
+  function dbToY(db) {
+    const clamped = Math.max(minDb, Math.min(maxDb, db));
+    return marginTop + ((maxDb - clamped) / dbRange) * drawHeight;
+  }
+
+  // Horizontal Grid Lines matching the shared middle axis
+  const dbSteps = [0, -6, -12, -18, -24, -30, -36, -42, -48, -54, -60, -66, -72, -78, -84, -90];
+  levelMeterCtx.lineWidth = 1;
+
+  for (let db of dbSteps) {
+    const y = dbToY(db);
+    levelMeterCtx.strokeStyle = '#181628';
+    levelMeterCtx.beginPath();
+    levelMeterCtx.moveTo(0, y);
+    levelMeterCtx.lineTo(w, y);
+    levelMeterCtx.stroke();
+  }
+
+  const activeL = (gonioScopeMode === 'post' && postAnalyserL) ? postAnalyserL : analyserL;
+  const activeR = (gonioScopeMode === 'post' && postAnalyserR) ? postAnalyserR : analyserR;
+
+  if (!activeL || !activeR) return;
+
+  activeL.getFloatTimeDomainData(floatTimeL);
+  activeR.getFloatTimeDomainData(floatTimeR);
+
+  let peakL = 0, peakR = 0;
+  for (let i = 0; i < floatTimeL.length; i++) {
+    const absL = Math.abs(floatTimeL[i]);
+    const absR = Math.abs(floatTimeR[i]);
+    if (absL > peakL) peakL = absL;
+    if (absR > peakR) peakR = absR;
+  }
+
+  const currentDbL = peakL > 0.00001 ? 20 * Math.log10(peakL) : minDb;
+  const currentDbR = peakR > 0.00001 ? 20 * Math.log10(peakR) : minDb;
+
+  if (currentDbL >= peakHoldL) { peakHoldL = currentDbL; peakHoldDecayL = 0; }
+  else { peakHoldDecayL += 0.35; peakHoldL = Math.max(minDb, peakHoldL - peakHoldDecayL); }
+
+  if (currentDbR >= peakHoldR) { peakHoldR = currentDbR; peakHoldDecayR = 0; }
+  else { peakHoldDecayR += 0.35; peakHoldR = Math.max(minDb, peakHoldR - peakHoldDecayR); }
+
+  const barW = 18;
+  const barL_x = 18;
+  const barR_x = 48;
+
+  function drawBar(x, currentDb, peakHoldDb, channelLabel, accentColor) {
+    const fillTopY = dbToY(currentDb);
+    const barHeight = (h - marginBottom) - fillTopY;
+
+    levelMeterCtx.fillStyle = '#090814';
+    levelMeterCtx.fillRect(x, marginTop, barW, drawHeight);
+
+    if (barHeight > 0) {
+      const grad = levelMeterCtx.createLinearGradient(0, h - marginBottom, 0, marginTop);
+      grad.addColorStop(0.0, '#0f381e');
+      grad.addColorStop(0.65, '#22c55e');
+      grad.addColorStop(0.88, '#eab308');
+      grad.addColorStop(1.0, '#ef4444');
+
+      levelMeterCtx.fillStyle = grad;
+      levelMeterCtx.fillRect(x, fillTopY, barW, barHeight);
+    }
+
+    const peakY = dbToY(peakHoldDb);
+    levelMeterCtx.fillStyle = '#ffffff';
+    levelMeterCtx.fillRect(x - 1, Math.round(peakY), barW + 2, 2);
+
+    levelMeterCtx.fillStyle = accentColor;
+    levelMeterCtx.font = 'bold 11px sans-serif';
+    levelMeterCtx.textAlign = 'center';
+    levelMeterCtx.fillText(channelLabel, x + barW / 2, h - 6);
+  }
+
+  drawBar(barL_x, currentDbL, peakHoldL, 'L', '#00f3ff');
+  drawBar(barR_x, currentDbR, peakHoldR, 'R', '#ff007f');
+
+  // Numerical Peak Readout Boxes in top margin (y = 2..19)
+  function drawPeakBox(x, peakDb) {
+    const isClip = peakDb >= 0.0;
+    const boxW = 32;
+    const boxH = 17;
+    const boxX = x + (barW / 2) - (boxW / 2);
+    const boxY = 2;
+
+    levelMeterCtx.fillStyle = isClip ? 'rgba(239, 68, 68, 0.9)' : '#121024';
+    levelMeterCtx.strokeStyle = isClip ? '#ef4444' : '#322f54';
+    levelMeterCtx.lineWidth = 1;
+    levelMeterCtx.fillRect(boxX, boxY, boxW, boxH);
+    levelMeterCtx.strokeRect(boxX, boxY, boxW, boxH);
+
+    levelMeterCtx.fillStyle = isClip ? '#ffffff' : (peakDb > -6 ? '#22c55e' : '#a2a1b8');
+    levelMeterCtx.font = 'bold 9px monospace';
+    levelMeterCtx.textAlign = 'center';
+
+    const dispText = peakDb <= -85 ? '-∞' : (isClip ? 'CLIP' : peakDb.toFixed(1));
+    levelMeterCtx.fillText(dispText, boxX + boxW / 2, boxY + 12);
+  }
+
+  drawPeakBox(barL_x, peakHoldL);
+  drawPeakBox(barR_x, peakHoldR);
+
+  levelMeterCtx.textAlign = 'start';
 }
 
 function formatTime(sec) {
@@ -2029,6 +2271,7 @@ window.addEventListener('resize', () => {
     renderDarwinWaveformToOffscreen();
     updateRTACanvasWidth();
     renderSpectrogramViewport();
+    drawLevelMeter();
   }
 });
 </script>
