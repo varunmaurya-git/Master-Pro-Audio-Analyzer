@@ -5,6 +5,9 @@
 [![Vanilla JS](https://img.shields.io/badge/Language-Vanilla%20JS-f7df1e?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Privacy](https://img.shields.io/badge/Privacy-100%25%20Client--Side-9d72ff?style=for-the-badge)](#-100-client-side-privacy)
 
+# Quick Access it from below link 
+# https://varunmaurya-git.github.io/Master-Pro-Audio-Analyzer/
+
 A full-fledged, zero-dependency, professional-grade real-time audio analysis application that operates 100% inside your web browser. Built with low-level **Vanilla JavaScript**, **Web Audio API**, **Canvas 2D**, and multi-threaded **Web Workers**.
 
 ---
