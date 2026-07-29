@@ -15,37 +15,131 @@ A full-fledged, zero-dependency, professional-grade real-time audio analysis app
 
 ---
 
-## 🚀 Key Features
+🚀 Key Features
 
-* **📊 Interactive HD Spectrogram (4096-Point FFT):**
-  * Dual-channel (Left / Right) spectral visualization.
-  * Powered by a **2D Catmull-Rom Bicubic Surface Interpolation Engine** (16-point spatial matrix filtering).
-  * Toggle between **Mel Scale** (perceptual pitch tuning) and **Linear Scale**.
-  * Up to **64x Horizontal Time Zoom** with interactive crosshair frequency and timestamp inspection.
-  * Variable gain boost controls (0.5x to 3.5x).
+    📊 Interactive Ultra-HD Spectrogram (8192-Point FFT)
 
-* **🎛️ Goniometer & Phase Scope:**
-  * Real-time 2D soundfield Lissajous scatter plot.
-  * Live **Phase Correlation Meter ($\Phi$)** ranging from -1 (out-of-phase) to +1 (perfect in-phase).
-  * **Dual Scope Views:** Switch between **Raw Track View** (unfiltered track stereo) and **Post Mono ON Routing View** (auditioned output signal).
+        8192-Point FFT Resolution: Generates 4,096 vertical frequency bins with
 
-* **📈 Logarithmic Spectrum Analyzer (RTA):**
-  * Real-time frequency response curves for Left (Cyan) and Right (Magenta) channels.
-  * Logarithmic frequency grid with dynamic dB level markers (0 dB to -72 dB).
-  * Quick-select band presets (**Full Range**, **Bass**, **Mids**, **Highs**).
-  * Isolated single-channel tracking when **Left Only** or **Right Only** is selected.
+                
+        5.38 Hz/bin
+        5.38 Hz/bin
 
-* **⚡ Stereo Width & Phase Waveform Overview:**
-  * Whole-track amplitude overview with color-coded stereo health indicators:
-    * 🟢 **Green:** In-Phase / Safe Stereo
-    * 🟡 **Yellow:** Wide Stereo
-    * 🔴 **Red:** Anti-Phase (High risk of mono cancellation)
-  * Up to 25x horizontal zoom with playhead center-lock seeking.
+              
 
-* **🔀 Channel Routing & Auditioning:**
-  * **Stereo:** Standard dual-channel playback.
-  * **Left Only / Right Only:** Isolate individual stereo channels.
-  * **Mono: ON:** Sums stereo audio into true mono `(L + R) / 2` to test mono-compatibility.
+        precision for deep sub-bass, midrange, and high-frequency overtone separation.
+
+        Blackman-Harris Windowing: Employs 4-term Blackman-Harris windowing (
+
+                
+        −92 dB
+        −92 dB
+
+              
+
+        side-lobe suppression) to eliminate spectral leakage and fuzzy frequency smearing.
+
+        Bilinear Anti-Aliased Engine: Renders up to 16,000 high-density time columns with smooth, crisp, unpixelated clarity—even at maximum 64x horizontal zoom.
+
+        Interactive Inspection: Hover crosshairs provide instant readout of exact Frequency (Hz), Signal Level (dBFS), and Timestamp.
+
+        Perceptual Scales & Gain: Toggle between Mel Scale (perceptual pitch tuning) and Linear Scale, with variable gain boost controls (
+
+                
+        0.5×
+        0.5×
+
+              
+
+        to
+
+                
+        3.5×
+        3.5×
+
+              
+
+        ).
+
+    📈 Logarithmic Spectrum Analyzer (RTA) & PEAK dBFS Meter
+
+        Calibrated
+
+                
+        0 dBFS
+        0 dBFS
+
+              
+
+        to
+
+                
+        −90 dBFS
+        −90 dBFS
+
+              
+
+        Scale: Features a uniform linear 6 dB step grid across the entire vertical dynamic range.
+
+        Shared Middle dB Scale Axis: A single, centered dB scale column sitting between the RTA graph and Peak Meter, serving both modules simultaneously.
+
+        Pro RTA Display Boost: Selectable display boost (
+
+                
+        +0 dB,+6 dB,+12 dB Default,+18 dB
+        +0 dB,+6 dB,+12 dB Default,+18 dB
+
+              
+
+        ) matching FabFilter Pro-Q & Voxengo SPAN industry standards.
+
+        Peak-Bin Aggregation & Ballistics: Smooth temporal decay with peak max-pooling so no fast harmonic spikes are missed.
+
+        Dedicated Peak Level Meter: Fully labeled PEAK dBFS meter featuring white peak-hold lines and a 1:1 matched bottom readout container showing L (Cyan) and R (Magenta) numerical dB values.
+
+    🎛️ Goniometer & Phase Scope
+
+        Real-time 2D soundfield Lissajous scatter plot.
+
+        Live Phase Correlation Meter (
+
+                
+        Φ
+        Φ
+
+              
+
+        ) ranging from -1 (anti-phase) to +1 (perfect in-phase).
+
+        Dual Scope Views: Switch between Raw Track View (unfiltered audio file) and Post Mono ON Routing View (monitored signal that collapses visually into a straight vertical line in mono mode).
+
+    ⚡ Stereo Width & Phase Waveform Overview
+
+        Whole-track amplitude overview with color-coded stereo health indicators:
+
+            🟢 Green: In-Phase / Safe Stereo
+
+            🟡 Yellow: Wide Stereo
+
+            🔴 Red: Anti-Phase (High risk of mono cancellation)
+
+        Up to 25x horizontal zoom with playhead center-lock seeking.
+
+    🔀 Channel Routing & Auditioning
+
+        Stereo: Standard dual-channel playback.
+
+        Left Only / Right Only: Isolate individual stereo channels.
+
+        Mono: ON: Sums stereo audio into true mono
+
+                
+        (L+R)/2
+        (L+R)/2
+
+              
+
+        to test mono-compatibility.
 
 ---
 
