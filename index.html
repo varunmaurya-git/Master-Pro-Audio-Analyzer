@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-<!-- Google tag (gtag.js) -->
+<!-- Google Tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-REP3XJHRD5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -14,22 +14,33 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Master Pro Audio Analyzer Suite</title>
+<title>Master Pro Audio Analyzer Suite - Professional Local DSP Studio</title>
 <style>
+/* ==========================================================================
+   DESIGN SYSTEM & DESIGN TOKENS
+   ========================================================================== */
 :root {
   --bg: #070611;
   --panel-bg: #121124;
+  --panel-border: #232238;
+  --panel-inner-border: #1c1a2e;
   --accent-purple: #9d72ff;
+  --accent-purple-glow: rgba(157, 114, 255, 0.35);
   --accent-cyan: #00f3ff;
+  --accent-cyan-glow: rgba(0, 243, 255, 0.35);
   --accent-green: #22c55e;
+  --accent-yellow: #eab308;
   --accent-red: #ef4444;
   --text-muted: #888799;
   --text-bright: #ececff;
+  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-stack);
   background-color: var(--bg);
   color: var(--text-bright);
   padding: 15px;
@@ -37,9 +48,14 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Author Header Banner */
+/* ==========================================================================
+   HEADER BRANDING BANNER
+   ========================================================================== */
 .header-branding {
   width: 100%;
   max-width: 1350px;
@@ -53,7 +69,7 @@ body {
 }
 
 .header-title {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: 1px;
   background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
@@ -114,6 +130,9 @@ body {
   text-decoration: underline;
 }
 
+/* ==========================================================================
+   TOP CONTROL BAR & ROUTING
+   ========================================================================== */
 .top-bar {
   width: 100%;
   max-width: 1350px;
@@ -125,7 +144,7 @@ body {
   align-items: center;
   margin-bottom: 15px;
   flex-wrap: wrap;
-  border: 1px solid #232238;
+  border: 1px solid var(--panel-border);
 }
 
 input[type="file"], button, input[type="number"], input[type="range"], select {
@@ -137,7 +156,8 @@ input[type="file"], button, input[type="number"], input[type="range"], select {
   cursor: pointer;
   font-weight: 600;
   font-size: 0.85rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  font-family: var(--font-stack);
 }
 
 input[type="number"] {
@@ -158,7 +178,7 @@ button.active {
 }
 
 button.channel-active {
-  box-shadow: 0 0 8px var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan-glow);
   border-color: var(--accent-cyan) !important;
 }
 
@@ -167,7 +187,7 @@ button.channel-active {
   overflow-x: auto;
   background: #040308;
   border-radius: 6px;
-  border: 1px solid #1c1a2e;
+  border: 1px solid var(--panel-inner-border);
   position: relative;
 }
 
@@ -176,11 +196,14 @@ button.channel-active {
 .scroll-container::-webkit-scrollbar-thumb { background: #3d3a61; border-radius: 5px; }
 .scroll-container::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
 
+/* ==========================================================================
+   WAVEFORM OVERVIEW PANEL
+   ========================================================================== */
 .waveform-section {
   width: 100%;
   max-width: 1350px;
   background: var(--panel-bg);
-  border: 1px solid #232238;
+  border: 1px solid var(--panel-border);
   border-radius: 8px;
   padding: 12px 15px;
   margin-bottom: 15px;
@@ -217,11 +240,15 @@ button.channel-active {
   font-size: 0.75rem;
   color: var(--text-muted);
   margin-top: 6px;
+  flex-wrap: wrap;
 }
 
 .legend-item { display: flex; align-items: center; gap: 5px; }
 .legend-color { width: 12px; height: 12px; border-radius: 2px; }
 
+/* ==========================================================================
+   DASHBOARD GRID (GONIOMETER & RTA SPECTRUM)
+   ========================================================================== */
 .dashboard-row {
   display: grid;
   grid-template-columns: 360px 1fr;
@@ -233,7 +260,7 @@ button.channel-active {
 
 .card {
   background: var(--panel-bg);
-  border: 1px solid #232238;
+  border: 1px solid var(--panel-border);
   border-radius: 8px;
   padding: 15px;
   display: flex;
@@ -257,7 +284,7 @@ button.channel-active {
 #gonioCanvas {
   background: #040308;
   border-radius: 6px;
-  border: 1px solid #1c1a2e;
+  border: 1px solid var(--panel-inner-border);
 }
 
 .phase-bar-wrapper { width: 100%; margin-top: 10px; }
@@ -283,7 +310,7 @@ button.channel-active {
   width: 100%;
   background: #040308;
   border-radius: 6px;
-  border: 1px solid #1c1a2e;
+  border: 1px solid var(--panel-inner-border);
   overflow: hidden;
 }
 
@@ -298,9 +325,12 @@ button.channel-active {
   display: block;
   height: 320px;
   background: #020106;
-  border-left: 1px solid #1c1a2e;
+  border-left: 1px solid var(--panel-inner-border);
 }
 
+/* ==========================================================================
+   SPECTROGRAM MODULE
+   ========================================================================== */
 .spectro-controls {
   width: 100%;
   display: flex;
@@ -335,53 +365,91 @@ button.channel-active {
   font-weight: 600;
 }
 
-/* Explainer Section Styling */
+/* ==========================================================================
+   EXPLAINER & MIXING GUIDE CARDS
+   ========================================================================== */
 .explainer-card {
   width: 100%;
   max-width: 1350px;
   background: var(--panel-bg);
-  border: 1px solid #232238;
+  border: 1px solid var(--panel-border);
   border-radius: 8px;
-  padding: 15px 20px;
+  padding: 18px 22px;
   margin-top: 15px;
 }
+
 .explainer-title {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--accent-cyan);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   font-weight: 700;
 }
+
 .explainer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 15px;
 }
+
 .explainer-box {
   background: #05040d;
-  border: 1px solid #1c1a2e;
+  border: 1px solid var(--panel-inner-border);
   border-radius: 6px;
-  padding: 12px;
+  padding: 14px;
 }
+
 .explainer-box h4 {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--accent-purple);
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .explainer-box p {
   font-size: 0.78rem;
   color: var(--text-muted);
-  line-height: 1.45;
+  line-height: 1.5;
 }
+
 .explainer-box strong {
   color: var(--text-bright);
 }
 
+.reference-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 0.78rem;
+}
+
+.reference-table th, .reference-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--panel-inner-border);
+}
+
+.reference-table th {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  background: rgba(0, 243, 255, 0.05);
+}
+
+.reference-table td {
+  color: var(--text-muted);
+}
+
+.reference-table tr:hover td {
+  background: rgba(157, 114, 255, 0.05);
+}
+
 audio { display: none; }
 
+/* ==========================================================================
+   LOADING OVERLAY & MODALS
+   ========================================================================== */
 .loading-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -395,10 +463,12 @@ audio { display: none; }
   pointer-events: none;
   transition: opacity 0.2s ease;
 }
+
 .loading-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
+
 .loading-box {
   background: #141329;
   border: 1.5px solid #4a4675;
@@ -411,6 +481,7 @@ audio { display: none; }
   text-align: center;
   box-shadow: 0 15px 50px rgba(0,0,0,0.9);
 }
+
 .loading-title {
   font-size: 1.45rem;
   font-weight: 800;
@@ -418,6 +489,7 @@ audio { display: none; }
   color: var(--accent-cyan);
   letter-spacing: 0.5px;
 }
+
 .progress-bar-container {
   width: 100%;
   height: 12px;
@@ -427,12 +499,14 @@ audio { display: none; }
   margin: 18px 0 12px 0;
   border: 1px solid #3d3a61;
 }
+
 .progress-bar-fill {
   width: 0%;
   height: 100%;
   background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
   transition: width 0.08s ease-out;
 }
+
 .loading-status {
   font-size: 1.02rem;
   color: #ffffff;
@@ -448,6 +522,7 @@ audio { display: none; }
   padding: 20px 22px;
   text-align: left;
 }
+
 .loading-subhead {
   font-size: 0.82rem;
   color: var(--accent-purple);
@@ -456,6 +531,7 @@ audio { display: none; }
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
+
 .loading-info-heading {
   font-size: 1.12rem;
   font-weight: 800;
@@ -463,12 +539,14 @@ audio { display: none; }
   margin-bottom: 10px;
   line-height: 1.35;
 }
+
 .loading-info-text {
   font-size: 0.93rem;
   color: #d1d0e6;
   line-height: 1.55;
   margin-bottom: 14px;
 }
+
 .loading-info-bullets {
   font-size: 0.90rem;
   color: #f0f0ff;
@@ -479,6 +557,7 @@ audio { display: none; }
   padding-top: 12px;
   line-height: 1.5;
 }
+
 .loading-info-bullets strong {
   color: var(--accent-cyan);
   font-weight: 700;
@@ -498,33 +577,44 @@ audio { display: none; }
   transition: opacity 0.2s ease;
   border: 3px dashed var(--accent-cyan);
 }
+
 .drop-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
+
 .drop-box {
   text-align: center;
   color: var(--accent-cyan);
 }
+
 .drop-title {
   font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 8px;
 }
+
 .drop-sub {
   font-size: 1rem;
   color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .dashboard-row {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 <body>
 
-<audio id="audioPlayer" crossorigin="anonymous"></audio>
+<!-- Audio element setup for Web Audio node routing -->
+<audio id="audioPlayer"></audio>
 
 <div id="dropOverlay" class="drop-overlay">
   <div class="drop-box">
     <div class="drop-title">Drop Audio File Here</div>
-    <div class="drop-sub">Release to analyze track</div>
+    <div class="drop-sub">Release file to begin local DSP track analysis</div>
   </div>
 </div>
 
@@ -536,7 +626,7 @@ audio { display: none; }
     </div>
     <div id="loadingStatus" class="loading-status">Decoding audio buffer...</div>
 
-    <!-- Finalized Value & Privacy Notice -->
+    <!-- Informational Modal Card -->
     <div class="loading-info-card">
       <div class="loading-subhead">(Quick read while your file is analyzing)</div>
       <div class="loading-info-heading">⚡ Professional-Grade Audio Analyzer: 100% Free, Private & Instant</div>
@@ -570,6 +660,7 @@ audio { display: none; }
   </div>
 </div>
 
+<!-- Main Top Control Bar -->
 <div class="top-bar">
   <input type="file" id="fileInput" accept="audio/*">
   <button id="btnPlayPause" disabled>Play</button>
@@ -581,6 +672,7 @@ audio { display: none; }
   <span id="fileNameDisplay" style="font-size:0.85rem; color:#888;">Select or drop an audio file to begin analysis (100% Private - Processed locally on your device).</span>
 </div>
 
+<!-- Waveform Overview Section -->
 <div class="waveform-section">
   <div class="waveform-header">
     <span>Stereo Width & Phase Correlation Overview</span>
@@ -601,6 +693,7 @@ audio { display: none; }
   </div>
 </div>
 
+<!-- Dashboard Grid (Goniometer Scope & Real-Time Spectrum) -->
 <div class="dashboard-row">
   <div class="card">
     <div class="card-title">
@@ -643,6 +736,7 @@ audio { display: none; }
   </div>
 </div>
 
+<!-- Spectrogram Module Container -->
 <div class="card" style="width:100%; max-width:1350px;">
   <div class="card-title">Interactive Spectrogram (Ultra-HD 8192-FFT Blackman-Harris Engine)</div>
   <div class="spectro-controls">
@@ -675,6 +769,7 @@ audio { display: none; }
   </div>
 </div>
 
+<!-- Reference & Functions Explainer -->
 <div class="explainer-card">
   <div class="explainer-title">Quick Reference & Module Functions Guide</div>
   <div class="explainer-grid">
@@ -703,10 +798,67 @@ audio { display: none; }
       <p>Ultra-HD 8192-FFT dual-channel spectral visualizer with Blackman-Harris windowing (-92 dB sidelobe attenuation) and Bilinear Anti-Aliased Rendering. Features Mel & Linear frequency scaling, 64x zoom, variable gain boost, and crosshair frequency/gain-dBFS/timestamp reading.</p>
     </div>
   </div>
+
+  <!-- Additional Engineering Guidelines & Cheat Sheets -->
+  <div style="margin-top: 20px;">
+    <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--accent-cyan); margin-bottom: 10px;">
+      Studio Mix & Frequency Spectrum Quick Reference Sheet
+    </h4>
+    <table class="reference-table">
+      <thead>
+        <tr>
+          <th>Band Name</th>
+          <th>Frequency Range</th>
+          <th>Spectral Characteristics & Sonic Function</th>
+          <th>Common Fixes & Mix Guidelines</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sub-Bass</td>
+          <td>20 Hz - 60 Hz</td>
+          <td>Sub-bass feel, physical rumble, sub-kick energy. Highly prone to phase cancellation in mono.</td>
+          <td>High-pass side channel at 100 Hz to keep sub-bass 100% mono centered.</td>
+        </tr>
+        <tr>
+          <td>Bass & Low-End</td>
+          <td>60 Hz - 250 Hz</td>
+          <td>Root note fundamentals of bass instruments, kick drum body, warmth and punch.</td>
+          <td>Duck bass around kick transient fundamental frequency to avoid muddy accumulation.</td>
+        </tr>
+        <tr>
+          <td>Low-Mids</td>
+          <td>250 Hz - 500 Hz</td>
+          <td>Body of vocals, snare weight, acoustic guitar power. Excessive energy causes boxiness.</td>
+          <td>Dip narrow notch around 300-400 Hz if mix sounds muddy or enclosed.</td>
+        </tr>
+        <tr>
+          <td>Mid-Range</td>
+          <td>500 Hz - 2 kHz</td>
+          <td>Vocal presence, lead synths, horn body, horn fundamentals. Human ear is extremely sensitive here.</td>
+          <td>Maintain balanced energy distribution to preserve instrument intelligibility in mono.</td>
+        </tr>
+        <tr>
+          <td>Upper-Mids</td>
+          <td>2 kHz - 4 kHz</td>
+          <td>Attack transients, vocal edge, pick noise, snare snap. Harshness builds quickly around 3 kHz.</td>
+          <td>Dynamic EQ cut at 3 kHz if vocals sound overly biting or fatiguing.</td>
+        </tr>
+        <tr>
+          <td>Presence & Brilliance</td>
+          <td>4 kHz - 20 kHz</td>
+          <td>Cymbal sizzle, air, shimmer, reverb tails, upper harmonic air frequencies.</td>
+          <td>Use smooth high-shelf boost on vocals above 10 kHz for silkiness.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
-// FAST FFT CLASS (8192 FFT FOR ULTRA-HD FREQUENCY PRECISION)
+/* ==========================================================================
+   FAST FFT ENGINE (8192-POINT COOLEY-TUKEY RADIX-2 IMPLEMENTATION)
+   ========================================================================== */
 class FastFFT {
   constructor(size) {
     this.size = size;
@@ -718,6 +870,7 @@ class FastFFT {
     this.real = new Float32Array(size);
     this.imag = new Float32Array(size);
 
+    // Pre-calculate Bit-Reversal Index Permutation Table
     let limit = 1;
     let bit = size >> 1;
     while (limit < size) {
@@ -728,6 +881,7 @@ class FastFFT {
       bit >>= 1;
     }
 
+    // Pre-calculate Trigonometric Lookup Tables for Twiddle Factors
     for (let i = 0; i < this.halfSize; i++) {
       const angle = -2 * Math.PI * i / size;
       this.cosTable[i] = Math.cos(angle);
@@ -735,17 +889,23 @@ class FastFFT {
     }
   }
 
+  /**
+   * Performs an in-place Cooley-Tukey Radix-2 FFT transform on audio data.
+   * Applies Blackman-Harris windowing and outputs normalized Uint8 magnitudes.
+   */
   transform(realIn, windowTable, magnitudeOut) {
     const n = this.size;
     const real = this.real;
     const imag = this.imag;
 
+    // Apply Bit-Reversal Permutation & Windowing
     for (let i = 0; i < n; i++) {
       const rev = this.reverseTable[i];
       real[rev] = (realIn[i] || 0) * windowTable[i];
       imag[rev] = 0;
     }
 
+    // Cooley-Tukey Butterfly Stages
     for (let len = 2; len <= n; len <<= 1) {
       const halfLen = len >> 1;
       const step = n / len;
@@ -763,6 +923,7 @@ class FastFFT {
       }
     }
 
+    // Convert Bin Magnitudes to dBFS Scale Normalized to Uint8 (0-255)
     const half = this.halfSize;
     const normFactor = 2.0 / n;
     for (let k = 0; k < half; k++) {
@@ -777,7 +938,9 @@ class FastFFT {
   }
 }
 
-// Audio Context & State
+/* ==========================================================================
+   GLOBAL AUDIO ENGINE STATE & VARIABLES
+   ========================================================================== */
 const audioPlayer = document.getElementById('audioPlayer');
 let audioCtx, mediaSource, rawSplitter, analyserL, analyserR;
 let stereoSplitter, gainL, gainR, stereoMerger, monoGain, mainOutputGain;
@@ -805,21 +968,21 @@ let rtaCanvasWidth = 900;
 let waveZoomFactor = 1.0;
 let waveBaseWidth = 1320;
 
-// Throttled 30 FPS Loop
+// Throttled 20 FPS Real-time Render Loop
 let lastRenderTime = 0;
 const TARGET_FPS = 20;
 const FRAME_INTERVAL = 1000 / TARGET_FPS; 
 
-// ULTRA-HD 8192 FFT
+// Ultra-HD 8192 FFT Constants
 const FFT_SIZE = 8192;
-const HALF_FFT = FFT_SIZE >>> 1; // 4096
+const HALF_FFT = FFT_SIZE >>> 1; // 4096 bins
 
 let fullTrackSpecL = null;
 let fullTrackSpecR = null;
 let specCols = 0;
 let specHalfFFT = HALF_FFT;
 
-// Float32 Buffers
+// Real-time Float32 Buffers
 const floatFreqL = new Float32Array(1024);
 const floatFreqR = new Float32Array(1024);
 const floatTimeL = new Float32Array(2048);
@@ -855,22 +1018,27 @@ function hideLoading() {
   loadingOverlay.classList.remove('active');
 }
 
+/* ==========================================================================
+   MEL-SCALE & PSYCHOACOUSTIC FORMULAS
+   ========================================================================== */
 function hzToMel(hz) { return 2595 * Math.log10(1 + Math.max(0, hz) / 700); }
 function melToHz(mel) { return 700 * (Math.pow(10, Math.max(0, mel) / 2595) - 1); }
 
-// High Precision 1024-Level Palette (iZotope RX Palette Engine)
+/* ==========================================================================
+   COLOR PALETTE LUT ENGINE (iZotope RX Studio Style 1024-Level LUT)
+   ========================================================================== */
 const colLUT = [];
 (function buildColorLUT() {
   const stops = [
-    [0.00, [4, 3, 12]],       // -100 dB
-    [0.15, [14, 10, 42]],     // -85 dB
-    [0.30, [45, 12, 95]],     // -70 dB
-    [0.45, [110, 20, 130]],   // -55 dB
-    [0.60, [185, 30, 85]],    // -40 dB
-    [0.75, [230, 80, 25]],    // -25 dB
-    [0.88, [255, 175, 20]],   // -12 dB
-    [0.96, [255, 235, 80]],   // -4 dB
-    [1.00, [255, 255, 240]]   // 0 dB
+    [0.00, [4, 3, 12]],       // -100 dBFS (Deep Void Blue)
+    [0.15, [14, 10, 42]],     // -85 dBFS
+    [0.30, [45, 12, 95]],     // -70 dBFS (Deep Purple)
+    [0.45, [110, 20, 130]],   // -55 dBFS
+    [0.60, [185, 30, 85]],    // -40 dBFS (Magenta)
+    [0.75, [230, 80, 25]],    // -25 dBFS (Bright Orange)
+    [0.88, [255, 175, 20]],   // -12 dBFS (Gold)
+    [0.96, [255, 235, 80]],   // -4 dBFS (Bright Yellow)
+    [1.00, [255, 255, 240]]   // 0 dBFS (Peak White)
   ];
   const LUT_SIZE = 1024;
   for (let v = 0; v < LUT_SIZE; v++) {
@@ -898,6 +1066,9 @@ const offscreenWaveCanvas = document.createElement('canvas');
 let hoverSpectro = { canvas: null, x: -1, y: -1, isLeft: true };
 let hoverRTA = { x: -1, y: -1, active: false };
 
+/* ==========================================================================
+   DOM ELEMENT REFERENCES
+   ========================================================================== */
 const fileInput = document.getElementById('fileInput');
 const btnPlayPause = document.getElementById('btnPlayPause');
 const btnMono = document.getElementById('btnMono');
@@ -942,7 +1113,9 @@ const rtaScrollArea = document.getElementById('rtaScrollArea');
 const specScrollArea = document.getElementById('specScrollArea');
 const specSpacer = document.getElementById('specSpacer');
 
-// Spacebar Key Listener
+/* ==========================================================================
+   KEYBOARD SHORTCUTS & EVENT LISTENERS
+   ========================================================================== */
 window.addEventListener('keydown', (e) => {
   const activeEl = document.activeElement;
   if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
@@ -957,11 +1130,15 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+/* ==========================================================================
+   WEB AUDIO API GRAPH SETUP & SIGNAL ROUTING
+   ========================================================================== */
 function initWebAudio() {
   if (audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   mediaSource = audioCtx.createMediaElementSource(audioPlayer);
 
+  // Pre-Routing Splitter and Raw Analysers
   rawSplitter = audioCtx.createChannelSplitter(2);
   analyserL = audioCtx.createAnalyser();
   analyserR = audioCtx.createAnalyser();
@@ -976,6 +1153,7 @@ function initWebAudio() {
   rawSplitter.connect(analyserL, 0);
   rawSplitter.connect(analyserR, 1);
 
+  // Channel Isolation Controls (Stereo, Left, Right)
   stereoSplitter = audioCtx.createChannelSplitter(2);
   gainL = audioCtx.createGain();
   gainR = audioCtx.createGain();
@@ -987,6 +1165,7 @@ function initWebAudio() {
   gainL.connect(stereoMerger, 0, 0);
   gainR.connect(stereoMerger, 0, 1);
 
+  // Mono Summing Path
   monoGain = audioCtx.createGain();
   monoGain.channelCount = 1;
   monoGain.channelCountMode = "explicit";
@@ -994,6 +1173,7 @@ function initWebAudio() {
 
   mediaSource.connect(monoGain);
 
+  // Main Master Output Gain & Output Analysers
   mainOutputGain = audioCtx.createGain();
   mainOutputGain.channelCount = 2;
   mainOutputGain.channelCountMode = "explicit";
@@ -1104,6 +1284,9 @@ function updateRTACanvasWidth() {
   rtaCanvasWidth = specW;
 }
 
+/* ==========================================================================
+   AUDIO FILE LOADING & DECODING
+   ========================================================================== */
 async function loadAudioFile(file) {
   if (!file) return;
 
@@ -1127,11 +1310,12 @@ async function loadAudioFile(file) {
     showLoading("Decoding audio buffer...");
     const arrayBuffer = await file.arrayBuffer();
 
+    // Use ArrayBuffer clone to prevent buffer neutering across browsers
     try {
-      decodedAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      decodedAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
     } catch (decodeErr) {
       decodedAudioBuffer = await new Promise((resolve, reject) => {
-        audioCtx.decodeAudioData(arrayBuffer.slice(0), resolve, reject);
+        audioCtx.decodeAudioData(arrayBuffer, resolve, reject);
       });
     }
 
@@ -1175,7 +1359,9 @@ fileInput.addEventListener('change', (e) => {
   }
 });
 
-// Full Page Drag & Drop
+/* ==========================================================================
+   DRAG AND DROP HANDLERS
+   ========================================================================== */
 window.addEventListener('dragover', (e) => {
   e.preventDefault(); e.stopPropagation();
   dropOverlay.classList.add('active');
@@ -1235,6 +1421,9 @@ spectroTimeZoom.addEventListener('input', () => {
   renderSpectrogramViewport();
 });
 
+/* ==========================================================================
+   STEREO WAVEFORM RENDERING (DARWIN RMS & PHASE CORRELATION)
+   ========================================================================== */
 function renderDarwinWaveformToOffscreen() {
   if (!decodedAudioBuffer) return;
   const baseW = waveBaseWidth;
@@ -1293,7 +1482,9 @@ function renderDarwinWaveformToOffscreen() {
   updateOverlays();
 }
 
-// ULTRA-HD 16,000 COLUMN SPECTROGRAM ENGINE
+/* ==========================================================================
+   SPECTROGRAM DATA PROCESSING & CHUNKED FFT EXECUTION
+   ========================================================================== */
 function processSpectrogramData(buffer, onComplete) {
   const dataL = buffer.getChannelData(0);
   const dataR = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : dataL;
@@ -1307,7 +1498,8 @@ function processSpectrogramData(buffer, onComplete) {
     return;
   }
 
-  const targetCols = Math.min(16000, Math.max(3000, Math.floor(totalSamples / 128)));
+  // Allocate target columns for maximum clarity without UI lag
+  const targetCols = Math.min(4000, Math.max(1200, Math.floor(totalSamples / 512)));
   const hopSize = Math.max(32, Math.floor((totalSamples - FFT_SIZE) / targetCols));
   const cols = Math.floor((totalSamples - FFT_SIZE) / hopSize);
   const halfFFT = HALF_FFT;
@@ -1337,7 +1529,8 @@ function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplet
   const binsR = new Uint8Array(halfFFT);
 
   let x = 0;
-  const CHUNK_SIZE = 600; 
+  // CHUNK_SIZE = 40 allows smooth 60 FPS UI rendering without main thread freeze
+  const CHUNK_SIZE = 40;
 
   function processChunk() {
     const end = Math.min(cols, x + CHUNK_SIZE);
@@ -1374,7 +1567,9 @@ function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplet
   processChunk();
 }
 
-// BILINEAR ANTI-ALIASED SPECTROGRAM ENGINE
+/* ==========================================================================
+   BILINEAR ANTI-ALIASED SPECTROGRAM VIEWPORT RENDERER
+   ========================================================================== */
 function renderSpectrogramViewport() {
   if (!fullTrackSpecL || !specCols || !decodedAudioBuffer) return;
 
@@ -1395,8 +1590,9 @@ function renderSpectrogramViewport() {
   offscreenSpecL.width = renderW; offscreenSpecL.height = renderH;
   offscreenSpecR.width = renderW; offscreenSpecR.height = renderH;
 
-  specLCanvas.width = renderW; specLCanvas.style.width = cssW + 'px'; specLCanvas.style.height = cssH + 'px';
-  specRCanvas.width = renderW; specRCanvas.style.width = cssW + 'px'; specRCanvas.style.height = cssH + 'px';
+  // Set internal canvas resolution height to renderH so 20Hz - 20kHz range is displayed on small/Retina displays
+  specLCanvas.width = renderW; specLCanvas.height = renderH; specLCanvas.style.width = cssW + 'px'; specLCanvas.style.height = cssH + 'px';
+  specRCanvas.width = renderW; specRCanvas.height = renderH; specRCanvas.style.width = cssW + 'px'; specRCanvas.style.height = cssH + 'px';
 
   const ctxL = offscreenSpecL.getContext('2d');
   const ctxR = offscreenSpecR.getContext('2d');
@@ -1531,6 +1727,9 @@ specScrollArea.addEventListener('scroll', () => {
   if (specCols) renderSpectrogramViewport();
 });
 
+/* ==========================================================================
+   SPECTROGRAM FREQUENCY BOUNDS & CONTROL HANDLERS
+   ========================================================================== */
 function setSpectrogramBounds(minVal, maxVal, sourceInput) {
   let min = Math.max(0, Math.min(19900, Math.round(Number(minVal) || 0)));
   let max = Math.max(min + 100, Math.min(20000, Math.round(Number(maxVal) || 20000)));
@@ -1594,6 +1793,9 @@ btnScaleLinear.addEventListener('click', () => {
 document.getElementById('preset100_3k').addEventListener('click', () => setSpectrogramBounds(100, 3000, 'preset'));
 document.getElementById('presetFull').addEventListener('click', () => setSpectrogramBounds(20, 20000, 'preset'));
 
+/* ==========================================================================
+   RTA SPECTRUM BOUNDS & PRESETS
+   ========================================================================== */
 rtaMinInput.addEventListener('change', () => {
   rtaMinFreq = Math.max(0, Math.min(parseInt(rtaMinInput.value) || 0, rtaMaxFreq - 50));
   rtaMinInput.value = rtaMinFreq;
@@ -1622,6 +1824,9 @@ document.getElementById('rtaPresetBass').addEventListener('click', () => { updat
 document.getElementById('rtaPresetMids').addEventListener('click', () => { updateRTABounds(500, 4000); document.getElementById('rtaPresetMids').classList.add('active'); });
 document.getElementById('rtaPresetHighs').addEventListener('click', () => { updateRTABounds(4000, 20000); document.getElementById('rtaPresetHighs').classList.add('active'); });
 
+/* ==========================================================================
+   MOUSE HOVER & INSPECTION TOOLTIPS
+   ========================================================================== */
 [specLCanvas, specRCanvas].forEach((canvas, idx) => {
   canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
@@ -1651,6 +1856,9 @@ specCanvas.addEventListener('mouseleave', () => {
   drawSpectrumAnalyzer();
 });
 
+/* ==========================================================================
+   TIMELINE SEEKING HANDLERS
+   ========================================================================== */
 function seekWaveform(clientX) {
   if (!audioPlayer.duration) return;
   const rect = waveCanvas.getBoundingClientRect();
@@ -1700,6 +1908,9 @@ window.addEventListener('mouseup', () => {
   isSeekingSpec = false;
 });
 
+/* ==========================================================================
+   OVERLAY & PLAYHEAD RENDERING LOOP
+   ========================================================================== */
 function updateOverlays() {
   if (!audioPlayer.duration) return;
   const cur = audioPlayer.currentTime || 0;
@@ -1754,7 +1965,7 @@ function updateOverlays() {
     const hoverPctX = hoverGlobalX / totalTrackWidth;
     const hoverSec = hoverPctX * dur;
 
-    // Calculate Spectrogram Gain dBFS at cursor position (x, y)
+    // Calculate Spectrogram Gain dBFS at cursor position
     let dbText = '-100.0 dBFS';
     if (targetData && specCols > 0) {
       const sampleRate = decodedAudioBuffer ? decodedAudioBuffer.sampleRate : 44100;
@@ -1826,6 +2037,9 @@ function renderLoop(timestamp) {
   animFrameId = requestAnimationFrame(renderLoop);
 }
 
+/* ==========================================================================
+   2D LISSAJOUS GONIOMETER & PHASE CORRELATION SCOPE
+   ========================================================================== */
 function drawGoniometer() {
   const w = gonioCanvas.width;
   const h = gonioCanvas.height;
@@ -1907,7 +2121,9 @@ function drawGoniometer() {
   gonioCtx.textAlign = 'start';
 }
 
-// SPECTRUM ANALYZER WITH SHARED MIDDLE dB SCALE COLUMN
+/* ==========================================================================
+   LOGARITHMIC SPECTRUM ANALYZER (RTA) & SHARED SCALE
+   ========================================================================== */
 function drawSpectrumAnalyzer() {
   const w = specCanvas.width;
   const h = specCanvas.height;
@@ -1925,8 +2141,8 @@ function drawSpectrumAnalyzer() {
   const dbRange = maxDb - minDb;
 
   const marginLeft = 12;
-  const marginRight = 55; // Space reserved for Shared Middle Axis Gutter
-  const marginTop = 22;   // Maximized 0 dBFS plot height
+  const marginRight = 55; // Reserved for Shared Middle Axis Gutter
+  const marginTop = 22;
   const marginBottom = 22;
 
   const drawWidth = w - marginLeft - marginRight;
@@ -1947,12 +2163,10 @@ function drawSpectrumAnalyzer() {
     return marginLeft + normF * drawWidth;
   }
 
-  // 1. Draw Shared Middle Axis Background Gutter
   const middleX = w - marginRight;
   specCtx.fillStyle = '#090814';
   specCtx.fillRect(middleX, 0, marginRight, h);
 
-  // Vertical Borders for Shared Middle Column
   specCtx.strokeStyle = '#322f54';
   specCtx.lineWidth = 1;
   specCtx.beginPath();
@@ -1960,7 +2174,6 @@ function drawSpectrumAnalyzer() {
   specCtx.moveTo(w - 1, marginTop - 4); specCtx.lineTo(w - 1, h - marginBottom + 4);
   specCtx.stroke();
 
-  // 2. Uniform 6 dB Linear Steps Centered in Shared Middle Column
   const dbSteps = [0, -6, -12, -18, -24, -30, -36, -42, -48, -54, -60, -66, -72, -78, -84, -90];
   specCtx.font = '9px monospace';
   specCtx.textAlign = 'center';
@@ -1968,30 +2181,25 @@ function drawSpectrumAnalyzer() {
   for (let db of dbSteps) {
     const y = dbToY(db);
 
-    // Horizontal Grid Line across spectrum
     specCtx.strokeStyle = '#181628';
     specCtx.beginPath();
     specCtx.moveTo(marginLeft, y);
     specCtx.lineTo(middleX, y);
     specCtx.stroke();
 
-    // Left tick mark (pointing to spectrum)
     specCtx.strokeStyle = '#322f54';
     specCtx.beginPath();
     specCtx.moveTo(middleX - 4, y); specCtx.lineTo(middleX, y);
     specCtx.stroke();
 
-    // Right tick mark (pointing to level meter)
     specCtx.beginPath();
     specCtx.moveTo(w - 4, y); specCtx.lineTo(w, y);
     specCtx.stroke();
 
-    // Centered dB Label
     specCtx.fillStyle = db === 0 ? '#00f3ff' : '#888799';
     specCtx.fillText(`${db}`, middleX + (marginRight / 2), y + 3);
   }
 
-  // 3. Frequency Grid Lines & Bottom Hz Labels
   const freqGrid = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 12000, 14000, 16000, 18000, 20000];
   specCtx.fillStyle = '#66657a';
   specCtx.font = '10px sans-serif';
@@ -2017,13 +2225,12 @@ function drawSpectrumAnalyzer() {
   }
 
   const sampleRate = audioCtx ? audioCtx.sampleRate : 44100;
-  const numBins = floatFreqL.length; // 1024
+  const numBins = floatFreqL.length;
   const binWidth = sampleRate / analyserL.fftSize;
 
   analyserL.getFloatFrequencyData(floatFreqL);
   analyserR.getFloatFrequencyData(floatFreqR);
 
-  // Apply Window Compensation (+2.52 dB) + User Selectable RTA Display Boost
   const totalOffset = 2.52 + rtaDisplayBoost;
 
   for (let i = 0; i < numBins; i++) {
@@ -2034,7 +2241,6 @@ function drawSpectrumAnalyzer() {
     smoothedFreqR[i] = rawR > smoothedFreqR[i] ? rawR : (smoothedFreqR[i] * 0.82 + rawR * 0.18);
   }
 
-  // Peak-Bin Grouping Plotter Function
   function plotCurve(data, color) {
     specCtx.beginPath();
     specCtx.strokeStyle = color;
@@ -2078,13 +2284,11 @@ function drawSpectrumAnalyzer() {
     plotCurve(smoothedFreqR, '#ff007f');
   }
 
-  // Accurate Crosshair & Tooltip
   if (hoverRTA.active && hoverRTA.x >= marginLeft && hoverRTA.x <= middleX) {
     const fHover = xToHz(hoverRTA.x);
     const clampY = Math.max(marginTop, Math.min(h - marginBottom, hoverRTA.y));
     const cursorDb = maxDb - ((clampY - marginTop) / drawHeight) * dbRange;
 
-    // Actual Signal Peak dBFS at mouse frequency
     const hoverBin = Math.min(numBins - 1, Math.round(fHover / binWidth));
     let signalDb = minDb;
     if (channelMode === 'left') signalDb = smoothedFreqL[hoverBin];
@@ -2093,7 +2297,6 @@ function drawSpectrumAnalyzer() {
 
     signalDb = Math.max(minDb, Math.min(maxDb, signalDb));
 
-    // Draw Dot on Spectrum Curve at Mouse Frequency
     const curveY = dbToY(signalDb);
     specCtx.fillStyle = '#00f3ff';
     specCtx.beginPath();
@@ -2103,7 +2306,6 @@ function drawSpectrumAnalyzer() {
     specCtx.lineWidth = 1;
     specCtx.stroke();
 
-    // Dotted Crosshair Lines
     specCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
     specCtx.setLineDash([3, 3]);
     specCtx.beginPath();
@@ -2112,7 +2314,6 @@ function drawSpectrumAnalyzer() {
     specCtx.stroke();
     specCtx.setLineDash([]);
 
-    // Hover Tooltip Box
     const sigText = signalDb <= -89 ? '-∞' : (signalDb >= 0 ? '+0.0' : signalDb.toFixed(1));
     const text = `${Math.round(fHover).toLocaleString()} Hz  |  Signal: ${sigText} dBFS  |  Cursor: ${cursorDb.toFixed(1)} dB`;
     specCtx.font = 'bold 11px sans-serif';
@@ -2138,14 +2339,16 @@ function drawSpectrumAnalyzer() {
   specCtx.textAlign = 'start';
 }
 
-// REALTIME STEREO PEAK LEVEL METER
+/* ==========================================================================
+   STEREO PEAK LEVEL METER
+   ========================================================================== */
 function drawLevelMeter() {
   const w = levelMeterCanvas.width;
   const h = levelMeterCanvas.height;
   levelMeterCtx.fillStyle = '#020106';
   levelMeterCtx.fillRect(0, 0, w, h);
 
-  const marginTop = 22; // Maximized 0 dBFS plot height aligned with Spectrum
+  const marginTop = 22;
   const marginBottom = 22;
   const drawHeight = h - marginTop - marginBottom;
   const maxDb = 0;
@@ -2157,7 +2360,6 @@ function drawLevelMeter() {
     return marginTop + ((maxDb - clamped) / dbRange) * drawHeight;
   }
 
-  // Horizontal Grid Lines matching the shared middle axis
   const dbSteps = [0, -6, -12, -18, -24, -30, -36, -42, -48, -54, -60, -66, -72, -78, -84, -90];
   levelMeterCtx.lineWidth = 1;
 
@@ -2230,7 +2432,6 @@ function drawLevelMeter() {
   drawBar(barL_x, currentDbL, peakHoldL, 'L', '#00f3ff');
   drawBar(barR_x, currentDbR, peakHoldR, 'R', '#ff007f');
 
-  // Numerical Peak Readout Boxes in top margin (y = 2..19)
   function drawPeakBox(x, peakDb) {
     const isClip = peakDb >= 0.0;
     const boxW = 32;
