@@ -9,6 +9,7 @@
 # https://varunmaurya-git.github.io/Master-Pro-Audio-Analyzer/
 
 what it is and where it is used?
+
 spectrum analyzer, spectrogram, and goniometer are visual metering and diagnostic tools used in audio engineering, telecommunications, and signal processing to analyze different properties of a signal, such as its frequency components over time, energy distribution, or stereo phase relationships. you can simply use it to visually see your any audio file.
 
 I have created a full-fledged, zero-dependency, professional-grade real-time audio analysis application that operates 100% inside your web browser. Built with low-level **Vanilla JavaScript**, **Web Audio API**, **Canvas 2D**, and multi-threaded **Web Workers**.
