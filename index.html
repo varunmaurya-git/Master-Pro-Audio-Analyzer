@@ -636,7 +636,7 @@ audio { display: none; }
       <div class="loading-info-bullets">
         <div>🔒 <strong>100% Local Privacy:</strong> No cloud uploads. Unreleased music or confidential audio files stay completely secure and never leave your device.</div>
         <div>⚡ <strong>Hardware-Accelerated DSP:</strong> Computations execute directly on your machine’s CPU, eliminating upload delays and cloud server lag.</div>
-        <div>🎛️ <strong>Full Pro Metering:</strong> Includes a High-Resolution 8192-FFT Spectrogram, Goniometer Lissajous Phase Scope, Logarithmic RTA Spectrum Analyzer, and Peak Stereo Level Meter. Gives ability to access professional audio industry Mono On trick to listen file in mono but see it on scope in raw track view and post mono on view.</div>
+        <div>🎛️ <strong>Full Pro Metering:</strong> Includes a High-Resolution 8192-FFT Spectrogram, Goniometer Lissajous Phase Scope, RTA Spectrum Analyzer, and Peak Stereo Level Meter. Gives ability to access professional audio industry Mono On trick to listen file in mono but see it on scope in raw track view and post mono on view.</div>
         <div>🚀 <strong>Zero Friction:</strong> Instant access in any web browser with no software downloads, plugins, or sign-ups required.</div>
       </div>
     </div>
@@ -708,7 +708,7 @@ audio { display: none; }
   </div>
 
   <div class="card">
-    <div class="card-title">Logarithmic Spectrum Analyzer (RTA) & PEAK dBFS Meter</div>
+    <div class="card-title">Spectrum Analyzer (RTA) & PEAK dBFS Meter</div>
     <div class="rta-controls">
       <label>Min Hz:</label>
       <input type="number" id="rtaMinInput" value="20" min="0" max="20000">
@@ -749,7 +749,7 @@ audio { display: none; }
     <label style="margin-left:8px; color:var(--accent-cyan);">Zoom (1x - 64x):</label>
     <input type="range" id="spectroTimeZoom" min="1" max="64" step="0.5" value="1" style="width:110px;">
     <label style="margin-left:8px; color:#ffb703;">Bright:</label>
-    <input type="range" id="spectroGain" min="0.5" max="3.5" step="0.1" value="1.0" style="width:80px;">
+    <input type="range" id="spectroGain" min="0.5" max="3.5" step="0.1" value="1.4" style="width:80px;">
     <span style="color:#444; margin:0 2px;">| Scale:</span>
     <button id="btnScaleMel" class="active">Mel Scale</button>
     <button id="btnScaleLinear">Linear</button>
@@ -957,7 +957,7 @@ let animFrameId = null;
 let currentMinHz = 20;
 let currentMaxHz = 20000;
 let spectroZoomFactor = 1.0;
-let spectroGainVal = 1.0;
+let spectroGainVal = 1.4;
 let useMelScale = true;
 
 let rtaMinFreq = 20;
@@ -1498,9 +1498,9 @@ function processSpectrogramData(buffer, onComplete) {
     return;
   }
 
-  // Allocate target columns for maximum clarity without UI lag
-  const targetCols = Math.min(4000, Math.max(1200, Math.floor(totalSamples / 512)));
-  const hopSize = Math.max(32, Math.floor((totalSamples - FFT_SIZE) / targetCols));
+  // Ultra-high 12,000 temporal column density for 3x higher underlying FFT time resolution
+  const targetCols = Math.min(12000, Math.max(2400, Math.floor(totalSamples / 128)));
+  const hopSize = Math.max(16, Math.floor((totalSamples - FFT_SIZE) / targetCols));
   const cols = Math.floor((totalSamples - FFT_SIZE) / hopSize);
   const halfFFT = HALF_FFT;
 
@@ -1568,7 +1568,7 @@ function runMainThreadChunkedFFT(dataL, dataR, cols, hopSize, halfFFT, onComplet
 }
 
 /* ==========================================================================
-   BILINEAR ANTI-ALIASED SPECTROGRAM VIEWPORT RENDERER
+   CATMULL-ROM CUBIC SPLINE SPECTROGRAM VIEWPORT RENDERER
    ========================================================================== */
 function renderSpectrogramViewport() {
   if (!fullTrackSpecL || !specCols || !decodedAudioBuffer) return;
@@ -1639,49 +1639,64 @@ function renderSpectrogramViewport() {
     const exactCol = trackX * colRatio;
 
     if (colRatio <= 1.0) {
-      // ZOOMED IN: Bilinear Anti-Aliased Interpolation
-      const c0 = Math.floor(exactCol);
-      const c1 = Math.min(specCols - 1, c0 + 1);
-      const fx = exactCol - c0;
+      // ZOOMED IN: 4-Point Catmull-Rom Cubic Spline Time Interpolation (Zero Pixelation & Zero Blur)
+      const c1 = Math.max(0, Math.min(specCols - 1, Math.floor(exactCol)));
+      const c0 = Math.max(0, c1 - 1);
+      const c2 = Math.min(specCols - 1, c1 + 1);
+      const c3 = Math.min(specCols - 1, c1 + 2);
+
+      const fx = exactCol - Math.floor(exactCol);
+      const fx2 = fx * fx;
+      const fx3 = fx2 * fx;
+
+      // Pre-calculated Catmull-Rom Spline Polynomial Weights
+      const w0 = 0.5 * (-fx + 2.0 * fx2 - fx3);
+      const w1 = 0.5 * (2.0 - 5.0 * fx2 + 3.0 * fx3);
+      const w2 = 0.5 * (fx + 4.0 * fx2 - 3.0 * fx3);
+      const w3 = 0.5 * (-fx2 + fx3);
 
       const off_0 = c0 * specHalfFFT;
       const off_1 = c1 * specHalfFFT;
+      const off_2 = c2 * specHalfFFT;
+      const off_3 = c3 * specHalfFFT;
 
       for (let py = 0; py < renderH; py++) {
         const b0 = pyB_0[py];
         const b1 = pyB_1[py];
         const fy = pyB_fy[py];
 
-        const v00_L = fullTrackSpecL[off_0 + b0];
-        const v10_L = fullTrackSpecL[off_1 + b0];
-        const v01_L = fullTrackSpecL[off_0 + b1];
-        const v11_L = fullTrackSpecL[off_1 + b1];
+        // Smooth vertical frequency sampling for each of the 4 adjacent time columns
+        const v0_L = (fullTrackSpecL[off_0 + b0] || 0) * (1 - fy) + (fullTrackSpecL[off_0 + b1] || 0) * fy;
+        const v1_L = (fullTrackSpecL[off_1 + b0] || 0) * (1 - fy) + (fullTrackSpecL[off_1 + b1] || 0) * fy;
+        const v2_L = (fullTrackSpecL[off_2 + b0] || 0) * (1 - fy) + (fullTrackSpecL[off_2 + b1] || 0) * fy;
+        const v3_L = (fullTrackSpecL[off_3 + b0] || 0) * (1 - fy) + (fullTrackSpecL[off_3 + b1] || 0) * fy;
 
-        const valL_raw = (1 - fx) * (1 - fy) * v00_L + fx * (1 - fy) * v10_L + (1 - fx) * fy * v01_L + fx * fy * v11_L;
+        // Cubic Catmull-Rom spline evaluation across 4 time columns
+        const valL_raw = w0 * v0_L + w1 * v1_L + w2 * v2_L + w3 * v3_L;
         const valL = Math.max(0, Math.min(1, (valL_raw / 255.0) * spectroGainVal));
 
-        const v00_R = fullTrackSpecR[off_0 + b0];
-        const v10_R = fullTrackSpecR[off_1 + b0];
-        const v01_R = fullTrackSpecR[off_0 + b1];
-        const v11_R = fullTrackSpecR[off_1 + b1];
+        const v0_R = (fullTrackSpecR[off_0 + b0] || 0) * (1 - fy) + (fullTrackSpecR[off_0 + b1] || 0) * fy;
+        const v1_R = (fullTrackSpecR[off_1 + b0] || 0) * (1 - fy) + (fullTrackSpecR[off_1 + b1] || 0) * fy;
+        const v2_R = (fullTrackSpecR[off_2 + b0] || 0) * (1 - fy) + (fullTrackSpecR[off_2 + b1] || 0) * fy;
+        const v3_R = (fullTrackSpecR[off_3 + b0] || 0) * (1 - fy) + (fullTrackSpecR[off_3 + b1] || 0) * fy;
 
-        const valR_raw = (1 - fx) * (1 - fy) * v00_R + fx * (1 - fy) * v10_R + (1 - fx) * fy * v01_R + fx * fy * v11_R;
+        const valR_raw = w0 * v0_R + w1 * v1_R + w2 * v2_R + w3 * v3_R;
         const valR = Math.max(0, Math.min(1, (valR_raw / 255.0) * spectroGainVal));
 
         const off = (py * renderW + vx) * 4;
-        const lutIdxL = Math.round(valL * 1023);
-        const lutIdxR = Math.round(valR * 1023);
+        const lutIdxL = isNaN(valL) ? 0 : Math.max(0, Math.min(1023, Math.round(valL * 1023)));
+        const lutIdxR = isNaN(valR) ? 0 : Math.max(0, Math.min(1023, Math.round(valR * 1023)));
 
-        const cL = colLUT[lutIdxL];
-        const cR = colLUT[lutIdxR];
+        const cL = colLUT[lutIdxL] || [0, 0, 0];
+        const cR = colLUT[lutIdxR] || [0, 0, 0];
 
         dL[off]     = cL[0]; dL[off + 1] = cL[1]; dL[off + 2] = cL[2]; dL[off + 3] = 255;
         dR[off]     = cR[0]; dR[off + 1] = cR[1]; dR[off + 2] = cR[2]; dR[off + 3] = 255;
       }
     } else {
       // ZOOMED OUT: Peak Max-Pooling Aggregation
-      const startC = Math.floor(exactCol);
-      const endC = Math.min(specCols - 1, Math.ceil((trackX + 1) * colRatio));
+      const startC = Math.max(0, Math.min(specCols - 1, Math.floor(exactCol)));
+      const endC = Math.max(startC, Math.min(specCols - 1, Math.ceil((trackX + 1) * colRatio)));
 
       for (let py = 0; py < renderH; py++) {
         const b0 = pyB_0[py];
@@ -1692,21 +1707,21 @@ function renderSpectrogramViewport() {
 
         for (let c = startC; c <= endC; c++) {
           const offset = c * specHalfFFT;
-          const valL = (fullTrackSpecL[offset + b0] + (fullTrackSpecL[offset + b1] - fullTrackSpecL[offset + b0]) * bf) / 255;
-          const valR = (fullTrackSpecR[offset + b0] + (fullTrackSpecR[offset + b1] - fullTrackSpecR[offset + b0]) * bf) / 255;
+          const valL = ((fullTrackSpecL[offset + b0] || 0) + ((fullTrackSpecL[offset + b1] || 0) - (fullTrackSpecL[offset + b0] || 0)) * bf) / 255;
+          const valR = ((fullTrackSpecR[offset + b0] || 0) + ((fullTrackSpecR[offset + b1] || 0) - (fullTrackSpecR[offset + b0] || 0)) * bf) / 255;
           if (valL > maxL) maxL = valL;
           if (valR > maxR) maxR = valR;
         }
 
-        const vL = Math.max(0, Math.min(1, maxL * spectroGainVal));
-        const vR = Math.max(0, Math.min(1, maxR * spectroGainVal));
+        const valL = Math.max(0, Math.min(1, maxL * spectroGainVal));
+        const valR = Math.max(0, Math.min(1, maxR * spectroGainVal));
 
         const off = (py * renderW + vx) * 4;
-        const lutIdxL = Math.round(vL * 1023);
-        const lutIdxR = Math.round(vR * 1023);
+        const lutIdxL = isNaN(valL) ? 0 : Math.max(0, Math.min(1023, Math.round(valL * 1023)));
+        const lutIdxR = isNaN(valR) ? 0 : Math.max(0, Math.min(1023, Math.round(valR * 1023)));
 
-        const cL = colLUT[lutIdxL];
-        const cR = colLUT[lutIdxR];
+        const cL = colLUT[lutIdxL] || [0, 0, 0];
+        const cR = colLUT[lutIdxR] || [0, 0, 0];
 
         dL[off]     = cL[0]; dL[off + 1] = cL[1]; dL[off + 2] = cL[2]; dL[off + 3] = 255;
         dR[off]     = cR[0]; dR[off + 1] = cR[1]; dR[off + 2] = cR[2]; dR[off + 3] = 255;
@@ -1924,9 +1939,18 @@ function updateOverlays() {
   const dpr = Math.max(1, window.devicePixelRatio || 1);
 
   const totalTrackWidth = Math.max(cssW, Math.floor(cssW * spectroZoomFactor));
-  const scrollLeft = specScrollArea.scrollLeft;
-
   const globalPlayX = pct * totalTrackWidth;
+
+  // Recenter Spectrogram view if playhead leaves visible viewport while playing
+  if (!audioPlayer.paused) {
+    const specVisibleStart = specScrollArea.scrollLeft;
+    const specVisibleEnd = specVisibleStart + specScrollArea.clientWidth;
+    if (globalPlayX > specVisibleEnd || globalPlayX < specVisibleStart) {
+      specScrollArea.scrollLeft = Math.max(0, globalPlayX - specScrollArea.clientWidth / 2);
+    }
+  }
+
+  const scrollLeft = specScrollArea.scrollLeft;
   const viewPlayX = Math.round((globalPlayX - scrollLeft) * dpr);
 
   if (fullTrackSpecL && specCols) {
@@ -2013,6 +2037,17 @@ function updateOverlays() {
   }
 
   const waveW = waveCanvas.width;
+  const wavePlayX = pct * waveW;
+
+  // Recenter Stereo Waveform view if playhead leaves visible viewport while playing
+  if (!audioPlayer.paused) {
+    const waveVisibleStart = waveScrollArea.scrollLeft;
+    const waveVisibleEnd = waveVisibleStart + waveScrollArea.clientWidth;
+    if (wavePlayX > waveVisibleEnd || wavePlayX < waveVisibleStart) {
+      waveScrollArea.scrollLeft = Math.max(0, wavePlayX - waveScrollArea.clientWidth / 2);
+    }
+  }
+
   waveCtx.clearRect(0, 0, waveW, waveCanvas.height);
   waveCtx.drawImage(offscreenWaveCanvas, 0, 0);
   const px = Math.round(pct * waveW);
@@ -2122,7 +2157,7 @@ function drawGoniometer() {
 }
 
 /* ==========================================================================
-   LOGARITHMIC SPECTRUM ANALYZER (RTA) & SHARED SCALE
+   SPECTRUM ANALYZER (RTA) & SHARED SCALE
    ========================================================================== */
 function drawSpectrumAnalyzer() {
   const w = specCanvas.width;
